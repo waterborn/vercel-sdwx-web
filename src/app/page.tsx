@@ -1,7 +1,19 @@
+import Header from "./components/Header";
+import Hero from "./components/Hero";
+import IconicProducts from "./components/IconicProducts";
+import OurStory from "./components/OurStory";
+import Footer from "./components/Footer";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <h1 className="text-4xl font-bold">Hello</h1>
-    </main>
+    <>
+      <Header />
+      <main className="flex-1">
+        <Hero />
+        <IconicProducts />
+        <OurStory />
+      </main>
+      <Footer />
+    </>
   );
 }

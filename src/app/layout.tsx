@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "vercel-sdwx-web",
-  description: "A Next.js web application deployed on Vercel",
+  title: "CLINTIC — Movement Redefined",
+  description:
+    "CLINTIC: Premium athletic wear born in 2026. Where performance meets purpose.",
 };
 
 export default function RootLayout({
@@ -27,7 +28,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-white text-neutral-900">
+        {children}
+      </body>
     </html>
   );
 }
