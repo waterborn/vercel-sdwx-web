@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "vercel-sdwx-web",
-  description: "A Next.js web application deployed on Vercel",
+  title: "CLINTIC — Practice On.",
+  description:
+    "Precision yoga equipment crafted with intention. Where precision meets stillness — designed by yogis, for yogis.",
 };
 
 export default function RootLayout({

@@ -1,0 +1,33 @@
+技术栈：当前项目框架
+
+页面语言：English
+
+目标与定位：
+对标参考网站：https://eu.manduka.com/ （请在构思时，尽量吸收它的设计调性和页面布局感觉）
+风格与美学：国际、极简、禅意、宁静；留白克制；大量使用米色、原木色、哑光黑、大地色系；字体优雅，能传递出专业与高品质感。
+
+结构与内容模块（自上而下）：
+顶级导航栏 (Navigation Bar)：极简风格（Logo 居左，基础菜单居右）。包含菜单项：故事（Story）、产品（Products）、灵感（Inspiration）、社群（Community）。因为是静态展示，可采用锚点平滑滚动或纯视觉展示。不添加购物车、登录/注册按钮。
+主视觉区域 (Hero Section)：一段全屏或大图区域，背景可以是一张高品质、宁静的瑜伽练习场景（可使用来自 unsplash.com 等免费图库的占位链接）。居中放置大标题和副标题。
+主标题：Practice On. 或 Designed by Yogis。
+副标题：一句话诠释品牌理念。
+包含一个按钮：探索产品 或 发现我们的故事。
+品牌核心理念区块 (Products With Purpose)：展示品牌的环保材料和匠心设计。使用三张卡片或两个大卡片排列。
+
+卡片1（或左侧）：关键词“Precision & Passion”；文案参考“No other yoga equipment is built with the precision and passion of Manduka”。
+卡片2（或右侧）：关键词“Sustainability”；文案参考“design approach is rooted in principles of conservancy — creating responsibly sourced products while minimizing environmental waste”。
+
+标志性产品展示区块 (Iconic Products)：使用网格布局展示2-3个标志性产品（如 Manduka PRO® Mat、瑜伽砖、瑜伽带/毯子等）。每个产品需要包含占位图片、产品名和一句简短的描述。只做展示，无购买功能。
+Our Story 区块：简述 CLINTIC 2026年的起源，搭配一张体现起源或人文的黑白或暖色调图片。
+
+社群/灵感区块 (Inspiration/Community)：引用来自全球教师的引言，或展示社群在社交媒体上的一些动态（可用纯布局占位图模拟），传递“Yoga for All”的概念。
+
+页脚 (Footer)：包含简短的版权信息（© 2026 [你的品牌占位名]）、社交媒体图标的占位（Facebook/Instagram/Youtube），以及一些辅助链接（如联系我们、常见问题）。
+
+技术要求：
+所有的功能仅限前端静态演示，不涉及后端 API、用户登录、购物车或支付流程。
+确保完全响应式 (Responsive Design)：在桌面端、平板、手机上均需有良好的阅读体验。
+支持现代浏览器（Chrome, Firefox, Safari, Edge）。
+代码结构干净整洁，标注注释（便于理解和修改）。
+具备微妙的滚动视差（Parallax）或动态的淡入交互动画（Intersection Observer）以增加高级感。
+

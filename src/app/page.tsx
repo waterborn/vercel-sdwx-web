@@ -1,7 +1,23 @@
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
+import PurposeSection from "@/components/PurposeSection";
+import ProductsSection from "@/components/ProductsSection";
+import StorySection from "@/components/StorySection";
+import CommunitySection from "@/components/CommunitySection";
+import Footer from "@/components/Footer";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <h1 className="text-4xl font-bold">Hello</h1>
-    </main>
+    <>
+      <Navbar />
+      <main>
+        <HeroSection />
+        <PurposeSection />
+        <ProductsSection />
+        <StorySection />
+        <CommunitySection />
+      </main>
+      <Footer />
+    </>
   );
 }
