@@ -1,82 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { ArrowUpRight } from "./Icons";
+
+const navigation = [
+  { label: "The Collection", href: "/collections" },
+  { label: "Our Philosophy", href: "/#our-story" },
+  { label: "For Your Business", href: "/#contact" },
+];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        menuButton.current?.focus();
+      }
+    };
+    const desktop = window.matchMedia("(min-width: 900px)");
+    const closeOnDesktop = () => { if (desktop.matches) setMenuOpen(false); };
+    document.addEventListener("keydown", closeOnEscape);
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+      desktop.removeEventListener("change", closeOnDesktop);
+    };
+  }, [menuOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-neutral-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* Logo */}
-          <a href="#" className="text-xl lg:text-2xl font-bold tracking-[0.2em] uppercase text-neutral-900">
-            CLINTIC
-          </a>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#iconic-products" className="nav-link text-sm tracking-widest uppercase text-neutral-600 hover:text-neutral-900 transition-colors">
-              Products
-            </a>
-            <a href="#our-story" className="nav-link text-sm tracking-widest uppercase text-neutral-600 hover:text-neutral-900 transition-colors">
-              Our Story
-            </a>
-            <a href="#footer" className="nav-link text-sm tracking-widest uppercase text-neutral-600 hover:text-neutral-900 transition-colors">
-              Contact
-            </a>
-          </nav>
-
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden p-2 text-neutral-900"
-            aria-label="Toggle menu"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {menuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
+    <header className="site-header">
+      <div className="announcement">A LITTLE MOVEMENT. A BETTER EVERYDAY.</div>
+      <div className="site-container header-inner">
+        <Link href="/" className="wordmark" aria-label="CLINTIC home" onClick={() => setMenuOpen(false)}>CLINTIC<span className="wordmark-dot">.</span></Link>
+        <nav className="desktop-nav" aria-label="Main navigation">
+          {navigation.map((item) => <Link key={item.label} href={item.href} className="nav-link" aria-current={pathname === "/collections" && item.href === "/collections" ? "page" : undefined}>{item.label}</Link>)}
+        </nav>
+        <Link href="/collections" className="header-cta">Find your essentials <ArrowUpRight width="17" height="17" /></Link>
+        <button ref={menuButton} className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-navigation" aria-label={menuOpen ? "Close navigation" : "Open navigation"}>
+          <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d={menuOpen ? "m6 6 12 12M6 18 18 6" : "M3 8h18M3 16h18"} /></svg>
+        </button>
       </div>
-
-      {/* Mobile Nav */}
-      {menuOpen && (
-        <div className="md:hidden bg-white border-t border-neutral-100">
-          <nav className="flex flex-col px-6 py-4 gap-4">
-            <a
-              href="#iconic-products"
-              onClick={() => setMenuOpen(false)}
-              className="text-sm tracking-widest uppercase text-neutral-600 hover:text-neutral-900 transition-colors"
-            >
-              Products
-            </a>
-            <a
-              href="#our-story"
-              onClick={() => setMenuOpen(false)}
-              className="text-sm tracking-widest uppercase text-neutral-600 hover:text-neutral-900 transition-colors"
-            >
-              Our Story
-            </a>
-            <a
-              href="#footer"
-              onClick={() => setMenuOpen(false)}
-              className="text-sm tracking-widest uppercase text-neutral-600 hover:text-neutral-900 transition-colors"
-            >
-              Contact
-            </a>
-          </nav>
-        </div>
-      )}
+      {menuOpen && <nav id="mobile-navigation" className="mobile-nav site-container" aria-label="Mobile navigation">
+        {navigation.map((item) => <Link key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}<ArrowUpRight /></Link>)}
+      </nav>}
     </header>
   );
 }
