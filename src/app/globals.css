@@ -1,38 +1,26 @@
 @import "tailwindcss";
 
+/* ── Glintic design tokens — inspired by Manduka EU ── */
 :root {
-  --background: #f5f0eb;
-  --foreground: #1a1a1a;
-  --brand-beige: #e8ddd0;
-  --brand-cream: #f5f0eb;
-  --brand-warm: #d4c5b5;
-  --brand-dark: #2c2c2c;
-  --brand-matte-black: #1a1a1a;
-  --brand-wood: #a68b6b;
-  --brand-earth: #8b7355;
-  --brand-text: #3d3d3d;
-  --brand-text-light: #6b6b6b;
-  --brand-white: #faf8f5;
+  --background: #ffffff;
+  --foreground: #011f31;
+  --ink: #011f31;
+  --pure-black: #000000;
+  --pure-white: #ffffff;
+  --soft-gray: #f3f3f3;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-brand-beige: var(--brand-beige);
-  --color-brand-cream: var(--brand-cream);
-  --color-brand-warm: var(--brand-warm);
-  --color-brand-dark: var(--brand-dark);
-  --color-brand-matte-black: var(--brand-matte-black);
-  --color-brand-wood: var(--brand-wood);
-  --color-brand-earth: var(--brand-earth);
-  --color-brand-text: var(--brand-text);
-  --color-brand-text-light: var(--brand-text-light);
-  --color-brand-white: var(--brand-white);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--ink);
+  --color-brand-black: var(--pure-black);
+  --color-brand-white: var(--pure-white);
+  --color-soft-gray: var(--soft-gray);
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
@@ -40,14 +28,29 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Scroll animation classes */
+/* Underlined text link (Manduka-style) */
+.link-underline {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-thickness 0.2s ease;
+}
+
+.link-underline:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Scroll reveal animations */
 .fade-in-up {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transform: translateY(32px);
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.8s ease-out;
 }
 
 .fade-in-up.visible {
@@ -64,7 +67,12 @@ body {
   opacity: 1;
 }
 
-/* Parallax helper */
-.parallax-slow {
-  will-change: transform;
+/* Hide scrollbar for horizontal product rails */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

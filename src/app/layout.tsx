@@ -1,21 +1,26 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Cormorant_Garamond, Nunito_Sans } from "next/font/google";
 import "./globals.css";
+import AnnouncementBar from "@/components/AnnouncementBar";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const nunito = Nunito_Sans({
+  variable: "--font-nunito",
   subsets: ["latin"],
+  weight: ["300", "400", "600", "700", "900"],
 });
 
 export const metadata: Metadata = {
-  title: "CLINTIC — Practice On.",
+  title: "Glintic — Sports Support & Yoga Solutions",
   description:
-    "Precision yoga equipment crafted with intention. Where precision meets stillness — designed by yogis, for yogis.",
+    "Glintic is a Shanghai-based manufacturer specializing in athletic support gear and technical yoga equipment. Support Engineered. Performance Delivered.",
 };
 
 export default function RootLayout({
@@ -26,9 +31,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${cormorant.variable} ${nunito.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-brand-white text-ink">
+        <AnnouncementBar />
+        <Navbar />
+        <div className="flex-1">{children}</div>
+        <Footer />
+      </body>
     </html>
   );
 }

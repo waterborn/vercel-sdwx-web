@@ -36,6 +36,15 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local verification artifacts
+/.verify/
+
+# research reference screenshots
+/scripts/reference/
+
+# ide
+/.qoder/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
