@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
 import ContactCTA from "@/components/ContactCTA";
+import JsonLd from "@/components/JsonLd";
+import { faqs } from "@/data/faq";
+import { asset } from "@/data/images";
+import {
+  breadcrumbSchema,
+  faqSchema,
+  pageOpenGraph,
+} from "@/data/site";
 import {
   company,
   productLines,
@@ -9,9 +17,15 @@ import {
 } from "@/data/company";
 
 export const metadata: Metadata = {
-  title: "About Us | Glintic",
+  title: "About Us",
   description:
-    "Glintic is a Shanghai-based manufacturer specializing in athletic support gear and technical yoga equipment. ISO 14001 certified, SGS tested materials, OEM/ODM ready.",
+    "GLINTIC is a Shanghai-based manufacturer specializing in athletic support gear and technical yoga equipment. ISO 14001 certified, SGS tested materials, OEM/ODM ready.",
+  alternates: { canonical: "/about" },
+  openGraph: pageOpenGraph(
+    "About GLINTIC — Sports Support & Yoga Manufacturer",
+    "A one-stop Sports Support & Yoga ecosystem from Shanghai: six product lines, ISO 14001 certified facility, 7–12 day prototyping.",
+    "/about"
+  ),
 };
 
 const WHY_PARTNER = [
@@ -56,22 +70,34 @@ const FACTS = [
 ];
 
 export default function AboutPage() {
+  const studio = asset("/images/about-studio.jpg");
+
   return (
     <main>
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "About", path: "/about" },
+        ])}
+      />
+      <JsonLd data={faqSchema(faqs)} />
+
       {/* Page header */}
       <section className="bg-soft-gray py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-[11px] tracking-[0.3em] uppercase text-ink/50 mb-4">
-            About Glintic
+            {company.location} · Est. {company.founded}
           </p>
-          <h1 className="font-serif text-4xl md:text-6xl font-light tracking-[0.04em] text-ink mb-5">
-            Support Engineered.
-            <br />
-            Performance Delivered.
+          <h1 className="font-serif text-4xl md:text-6xl font-light tracking-[0.04em] text-ink mb-4">
+            About GLINTIC
           </h1>
+          <p className="font-serif text-xl md:text-3xl font-light leading-[1.3] tracking-[0.03em] text-ink/75 mb-6">
+            Support Engineered.
+            <br className="hidden md:block" /> Performance Delivered.
+          </p>
           <p className="text-sm md:text-base font-light leading-relaxed text-ink/65 max-w-2xl mx-auto">
             {company.name} — a Shanghai-based manufacturer building a one-stop
-            Sports Support & Yoga Ecosystem for global brands.
+            Sports Support &amp; Yoga Ecosystem for global brands.
           </p>
         </div>
       </section>
@@ -82,8 +108,14 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
             <div className="aspect-[4/5] overflow-hidden bg-soft-gray md:sticky md:top-24">
               <img
-                src="/images/about-studio.jpg"
-                alt="Glintic studio"
+                src={studio.src}
+                srcSet={studio.srcSet}
+                sizes="(min-width: 768px) 46vw, 92vw"
+                width={studio.width}
+                height={studio.height}
+                alt="GLINTIC studio"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -156,36 +188,44 @@ export default function AboutPage() {
             </h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-            {productLines.map((line, i) => (
-              <div key={line.title} className="group bg-brand-white">
-                <div className="aspect-[16/10] overflow-hidden">
-                  <img
-                    src={LINE_IMAGES[i]}
-                    alt={line.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-                <div className="p-7 md:p-9">
-                  <div className="flex items-baseline justify-between mb-4">
-                    <span className="font-serif text-3xl font-light text-ink/25">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    {line.lead && (
-                      <span className="text-[10px] tracking-[0.14em] uppercase bg-brand-black text-brand-white px-2.5 py-1">
-                        Flagship
-                      </span>
-                    )}
+            {productLines.map((line, i) => {
+              const lineImage = asset(LINE_IMAGES[i]);
+              return (
+                <div key={line.title} className="group bg-brand-white">
+                  <div className="aspect-[16/10] overflow-hidden">
+                    <img
+                      src={lineImage.src}
+                      srcSet={lineImage.srcSet}
+                      sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 92vw"
+                      width={lineImage.width}
+                      height={lineImage.height}
+                      alt={line.title}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
                   </div>
-                  <h3 className="font-serif text-xl md:text-2xl font-light text-ink mb-3">
-                    {line.title}
-                  </h3>
-                  <p className="text-sm font-light leading-relaxed text-ink/65">
-                    {line.summary}
-                  </p>
+                  <div className="p-7 md:p-9">
+                    <div className="flex items-baseline justify-between mb-4">
+                      <span className="font-serif text-3xl font-light text-ink/25">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      {line.lead && (
+                        <span className="text-[10px] tracking-[0.14em] uppercase bg-brand-black text-brand-white px-2.5 py-1">
+                          Flagship
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-serif text-xl md:text-2xl font-light text-ink mb-3">
+                      {line.title}
+                    </h3>
+                    <p className="text-sm font-light leading-relaxed text-ink/65">
+                      {line.summary}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -299,6 +339,37 @@ export default function AboutPage() {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* FAQ — target of the footer "FAQ" link */}
+      <section id="faq" className="py-16 md:py-24 scroll-mt-28">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="text-center mb-10 md:mb-14">
+            <p className="text-[11px] tracking-[0.28em] uppercase text-ink/50 mb-3">
+              Sourcing Questions
+            </p>
+            <h2 className="font-serif text-3xl md:text-5xl font-light tracking-[0.04em] text-ink">
+              FAQ
+            </h2>
+          </div>
+
+          <div className="border-t border-brand-black/10">
+            {faqs.map((faq) => (
+              <details key={faq.question} className="group border-b border-brand-black/10">
+                <summary className="flex items-center justify-between gap-6 py-5 cursor-pointer list-none [&::-webkit-details-marker]:hidden text-sm md:text-base font-semibold text-ink">
+                  {faq.question}
+                  <span aria-hidden className="relative shrink-0 w-6 h-6">
+                    <span className="absolute top-1/2 left-0 w-6 h-px bg-ink/60 -translate-y-1/2" />
+                    <span className="absolute top-0 left-1/2 w-px h-6 bg-ink/60 -translate-x-1/2 transition-opacity duration-300 group-open:opacity-0" />
+                  </span>
+                </summary>
+                <p className="pb-6 pr-8 text-sm md:text-[15px] font-light leading-relaxed text-ink/70">
+                  {faq.answer}
+                </p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 

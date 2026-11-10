@@ -48,7 +48,7 @@ try {
   await shotSection("Best Sellers", "home-bestsellers.png");
   await shotSection("Recovery & Wellness Gear", "home-banner.png");
   await shotSection("Built on Process", "home-process.png");
-  await shotSection("Partner With Glintic", "home-partner.png");
+  await shotSection("Partner With GLINTIC", "home-partner.png");
 
   // Footer
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));

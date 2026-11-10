@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { asset } from "@/data/images";
 
 /* ── Insights / process section — article cards, Manduka magazine style ── */
 const ARTICLES = [
@@ -33,7 +34,7 @@ export default function ProcessSection() {
     <section className="py-16 md:py-24 bg-soft-gray">
       <div className="max-w-7xl mx-auto px-6 text-center mb-10 md:mb-16">
         <p className="text-[11px] tracking-[0.28em] uppercase text-ink/50 mb-3">
-          The Glintic Method
+          The GLINTIC Method
         </p>
         <h2 className="font-serif text-3xl md:text-5xl font-light tracking-[0.04em] text-ink">
           Built on Process
@@ -42,13 +43,20 @@ export default function ProcessSection() {
 
       {/* Full-row cards: inset 32px from both edges */}
       <div className="grid md:grid-cols-3 gap-x-1 md:gap-x-2 gap-y-8 px-8">
-        {ARTICLES.map((article) => (
+        {ARTICLES.map((article) => {
+          const image = asset(article.image);
+          return (
           <article key={article.title} className="group bg-brand-white">
             <Link href={article.href} className="block aspect-[4/3] overflow-hidden">
               <img
-                src={article.image}
+                src={image.src}
+                srcSet={image.srcSet}
+                sizes="(min-width: 768px) 33vw, 92vw"
+                width={image.width}
+                height={image.height}
                 alt={article.title}
                 loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </Link>
@@ -72,7 +80,8 @@ export default function ProcessSection() {
               </Link>
             </div>
           </article>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

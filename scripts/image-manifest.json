@@ -1,0 +1,618 @@
+{
+  "/products/ankle-wrist-weights.png": {
+    "src": "/products/ankle-wrist-weights-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/ankle-wrist-weights-320w.webp 320w, /products/ankle-wrist-weights-640w.webp 640w",
+    "bytesBefore": 2746477,
+    "bytesAfter": 15598
+  },
+  "/products/balance-board-round.jpg": {
+    "src": "/products/balance-board-round-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/balance-board-round-320w.webp 320w, /products/balance-board-round-640w.webp 640w",
+    "bytesBefore": 21241,
+    "bytesAfter": 8716
+  },
+  "/products/ballet-boat-socks.png": {
+    "src": "/products/ballet-boat-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/ballet-boat-socks-320w.webp 320w, /products/ballet-boat-socks-640w.webp 640w",
+    "bytesBefore": 1381101,
+    "bytesAfter": 44726
+  },
+  "/products/ballet-shoes.jpg": {
+    "src": "/products/ballet-shoes-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/ballet-shoes-320w.webp 320w, /products/ballet-shoes-640w.webp 640w",
+    "bytesBefore": 87523,
+    "bytesAfter": 21570
+  },
+  "/products/bamboo-sports-socks.jpg": {
+    "src": "/products/bamboo-sports-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/bamboo-sports-socks-320w.webp 320w, /products/bamboo-sports-socks-640w.webp 640w",
+    "bytesBefore": 379321,
+    "bytesAfter": 19224
+  },
+  "/products/bamboo-yoga-towel.jpg": {
+    "src": "/products/bamboo-yoga-towel-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/bamboo-yoga-towel-320w.webp 320w, /products/bamboo-yoga-towel-640w.webp 640w",
+    "bytesBefore": 90017,
+    "bytesAfter": 36260
+  },
+  "/products/calf-strap-pilates-socks.jpg": {
+    "src": "/products/calf-strap-pilates-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/calf-strap-pilates-socks-320w.webp 320w, /products/calf-strap-pilates-socks-640w.webp 640w",
+    "bytesBefore": 792436,
+    "bytesAfter": 20500
+  },
+  "/products/cork-balance-board-set.jpg": {
+    "src": "/products/cork-balance-board-set-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/cork-balance-board-set-320w.webp 320w, /products/cork-balance-board-set-640w.webp 640w",
+    "bytesBefore": 544184,
+    "bytesAfter": 37800
+  },
+  "/products/cork-fascia-ball.jpg": {
+    "src": "/products/cork-fascia-ball-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/cork-fascia-ball-320w.webp 320w, /products/cork-fascia-ball-640w.webp 640w",
+    "bytesBefore": 658749,
+    "bytesAfter": 30768
+  },
+  "/products/cork-half-ball.png": {
+    "src": "/products/cork-half-ball-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/cork-half-ball-320w.webp 320w, /products/cork-half-ball-640w.webp 640w",
+    "bytesBefore": 632960,
+    "bytesAfter": 32610
+  },
+  "/products/cork-massage-roller.png": {
+    "src": "/products/cork-massage-roller-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/cork-massage-roller-320w.webp 320w, /products/cork-massage-roller-640w.webp 640w",
+    "bytesBefore": 696467,
+    "bytesAfter": 26108
+  },
+  "/products/crescent-meditation-pillow.png": {
+    "src": "/products/crescent-meditation-pillow-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/crescent-meditation-pillow-320w.webp 320w, /products/crescent-meditation-pillow-640w.webp 640w",
+    "bytesBefore": 605766,
+    "bytesAfter": 8548
+  },
+  "/products/electric-peanut-ball.jpg": {
+    "src": "/products/electric-peanut-ball-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/electric-peanut-ball-320w.webp 320w, /products/electric-peanut-ball-640w.webp 640w",
+    "bytesBefore": 92733,
+    "bytesAfter": 13452
+  },
+  "/products/eva-foam-roller-53.jpg": {
+    "src": "/products/eva-foam-roller-53-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/eva-foam-roller-53-320w.webp 320w, /products/eva-foam-roller-53-640w.webp 640w",
+    "bytesBefore": 54490,
+    "bytesAfter": 19538
+  },
+  "/products/eva-foam-roller-camo.jpg": {
+    "src": "/products/eva-foam-roller-camo-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/eva-foam-roller-camo-320w.webp 320w, /products/eva-foam-roller-camo-640w.webp 640w",
+    "bytesBefore": 78893,
+    "bytesAfter": 33872
+  },
+  "/products/eva-knee-pad.jpg": {
+    "src": "/products/eva-knee-pad-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/eva-knee-pad-320w.webp 320w, /products/eva-knee-pad-640w.webp 640w",
+    "bytesBefore": 111944,
+    "bytesAfter": 27544
+  },
+  "/products/eva-yoga-blocks.jpg": {
+    "src": "/products/eva-yoga-blocks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/eva-yoga-blocks-320w.webp 320w, /products/eva-yoga-blocks-640w.webp 640w",
+    "bytesBefore": 295789,
+    "bytesAfter": 10128
+  },
+  "/products/fitness-gloves-women.jpg": {
+    "src": "/products/fitness-gloves-women-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/fitness-gloves-women-320w.webp 320w, /products/fitness-gloves-women-640w.webp 640w",
+    "bytesBefore": 256827,
+    "bytesAfter": 46024
+  },
+  "/products/five-toe-pilates-socks.png": {
+    "src": "/products/five-toe-pilates-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/five-toe-pilates-socks-320w.webp 320w, /products/five-toe-pilates-socks-640w.webp 640w",
+    "bytesBefore": 1464342,
+    "bytesAfter": 51340
+  },
+  "/products/five-toe-socks.jpg": {
+    "src": "/products/five-toe-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/five-toe-socks-320w.webp 320w, /products/five-toe-socks-640w.webp 640w",
+    "bytesBefore": 66160,
+    "bytesAfter": 39292
+  },
+  "/products/floor-exercise-mat.png": {
+    "src": "/products/floor-exercise-mat-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/floor-exercise-mat-320w.webp 320w, /products/floor-exercise-mat-640w.webp 640w",
+    "bytesBefore": 542368,
+    "bytesAfter": 9100
+  },
+  "/products/hand-grip-dumbbell.png": {
+    "src": "/products/hand-grip-dumbbell-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/hand-grip-dumbbell-320w.webp 320w, /products/hand-grip-dumbbell-640w.webp 640w",
+    "bytesBefore": 528197,
+    "bytesAfter": 5506
+  },
+  "/products/hip-lifting-band.jpg": {
+    "src": "/products/hip-lifting-band-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/hip-lifting-band-320w.webp 320w, /products/hip-lifting-band-640w.webp 640w",
+    "bytesBefore": 58808,
+    "bytesAfter": 32006
+  },
+  "/products/iyengar-yoga-bolster.png": {
+    "src": "/products/iyengar-yoga-bolster-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/iyengar-yoga-bolster-320w.webp 320w, /products/iyengar-yoga-bolster-640w.webp 640w",
+    "bytesBefore": 555123,
+    "bytesAfter": 8922
+  },
+  "/products/iyengar-yoga-strap.png": {
+    "src": "/products/iyengar-yoga-strap-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/iyengar-yoga-strap-320w.webp 320w, /products/iyengar-yoga-strap-640w.webp 640w",
+    "bytesBefore": 535005,
+    "bytesAfter": 22334
+  },
+  "/products/knee-compression-sleeve.png": {
+    "src": "/products/knee-compression-sleeve-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/knee-compression-sleeve-320w.webp 320w, /products/knee-compression-sleeve-640w.webp 640w",
+    "bytesBefore": 1679437,
+    "bytesAfter": 55210
+  },
+  "/products/latex-resistance-bands-set.jpg": {
+    "src": "/products/latex-resistance-bands-set-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/latex-resistance-bands-set-320w.webp 320w, /products/latex-resistance-bands-set-640w.webp 640w",
+    "bytesBefore": 101533,
+    "bytesAfter": 48306
+  },
+  "/products/latex-yoga-ropes.jpg": {
+    "src": "/products/latex-yoga-ropes-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/latex-yoga-ropes-320w.webp 320w, /products/latex-yoga-ropes-640w.webp 640w",
+    "bytesBefore": 28928,
+    "bytesAfter": 11638
+  },
+  "/products/leg-stretching-strap.png": {
+    "src": "/products/leg-stretching-strap-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/leg-stretching-strap-320w.webp 320w, /products/leg-stretching-strap-640w.webp 640w",
+    "bytesBefore": 896306,
+    "bytesAfter": 30360
+  },
+  "/products/magnetic-wristband.png": {
+    "src": "/products/magnetic-wristband-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/magnetic-wristband-320w.webp 320w, /products/magnetic-wristband-640w.webp 640w",
+    "bytesBefore": 302224,
+    "bytesAfter": 11432
+  },
+  "/products/mat-carrier-strap.png": {
+    "src": "/products/mat-carrier-strap-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/mat-carrier-strap-320w.webp 320w, /products/mat-carrier-strap-640w.webp 640w",
+    "bytesBefore": 436571,
+    "bytesAfter": 16256
+  },
+  "/products/microfiber-mat-towel.png": {
+    "src": "/products/microfiber-mat-towel-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/microfiber-mat-towel-320w.webp 320w, /products/microfiber-mat-towel-640w.webp 640w",
+    "bytesBefore": 716979,
+    "bytesAfter": 33772
+  },
+  "/products/mid-calf-five-toe-socks.jpg": {
+    "src": "/products/mid-calf-five-toe-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/mid-calf-five-toe-socks-320w.webp 320w, /products/mid-calf-five-toe-socks-640w.webp 640w",
+    "bytesBefore": 846210,
+    "bytesAfter": 19924
+  },
+  "/products/mini-dumbbells.png": {
+    "src": "/products/mini-dumbbells-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/mini-dumbbells-320w.webp 320w, /products/mini-dumbbells-640w.webp 640w",
+    "bytesBefore": 179551,
+    "bytesAfter": 6158
+  },
+  "/products/multi-loop-band.jpg": {
+    "src": "/products/multi-loop-band-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/multi-loop-band-320w.webp 320w, /products/multi-loop-band-640w.webp 640w",
+    "bytesBefore": 300542,
+    "bytesAfter": 15474
+  },
+  "/products/oak-forest-cork-ball.jpg": {
+    "src": "/products/oak-forest-cork-ball-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/oak-forest-cork-ball-320w.webp 320w, /products/oak-forest-cork-ball-640w.webp 640w",
+    "bytesBefore": 752537,
+    "bytesAfter": 21768
+  },
+  "/products/pilates-bar-set.jpg": {
+    "src": "/products/pilates-bar-set-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/pilates-bar-set-320w.webp 320w, /products/pilates-bar-set-640w.webp 640w",
+    "bytesBefore": 74086,
+    "bytesAfter": 35898
+  },
+  "/products/pilates-mat-cover-honeycomb.png": {
+    "src": "/products/pilates-mat-cover-honeycomb-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/pilates-mat-cover-honeycomb-320w.webp 320w, /products/pilates-mat-cover-honeycomb-640w.webp 640w",
+    "bytesBefore": 1093725,
+    "bytesAfter": 35460
+  },
+  "/products/pilates-mat-cover-polka.png": {
+    "src": "/products/pilates-mat-cover-polka-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/pilates-mat-cover-polka-320w.webp 320w, /products/pilates-mat-cover-polka-640w.webp 640w",
+    "bytesBefore": 1077519,
+    "bytesAfter": 47726
+  },
+  "/products/pilates-yoga-socks.jpg": {
+    "src": "/products/pilates-yoga-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/pilates-yoga-socks-320w.webp 320w, /products/pilates-yoga-socks-640w.webp 640w",
+    "bytesBefore": 39594,
+    "bytesAfter": 10452
+  },
+  "/products/portable-massage-ball.png": {
+    "src": "/products/portable-massage-ball.webp",
+    "width": 320,
+    "height": 320,
+    "bytesBefore": 215567,
+    "bytesAfter": 2322
+  },
+  "/products/portable-silicone-massage-ball.png": {
+    "src": "/products/portable-silicone-massage-ball-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/portable-silicone-massage-ball-320w.webp 320w, /products/portable-silicone-massage-ball-640w.webp 640w",
+    "bytesBefore": 2347377,
+    "bytesAfter": 5996
+  },
+  "/products/pull-up-grips.png": {
+    "src": "/products/pull-up-grips-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/pull-up-grips-320w.webp 320w, /products/pull-up-grips-640w.webp 640w",
+    "bytesBefore": 4632599,
+    "bytesAfter": 45488
+  },
+  "/products/push-up-board-14in1.jpg": {
+    "src": "/products/push-up-board-14in1-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/push-up-board-14in1-320w.webp 320w, /products/push-up-board-14in1-640w.webp 640w",
+    "bytesBefore": 481055,
+    "bytesAfter": 23990
+  },
+  "/products/push-up-board-color.jpg": {
+    "src": "/products/push-up-board-color-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/push-up-board-color-320w.webp 320w, /products/push-up-board-color-640w.webp 640w",
+    "bytesBefore": 31543,
+    "bytesAfter": 17108
+  },
+  "/products/pvc-yoga-ball.png": {
+    "src": "/products/pvc-yoga-ball-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/pvc-yoga-ball-320w.webp 320w, /products/pvc-yoga-ball-640w.webp 640w",
+    "bytesBefore": 292036,
+    "bytesAfter": 7848
+  },
+  "/products/qiyun-cork-roller.jpg": {
+    "src": "/products/qiyun-cork-roller-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/qiyun-cork-roller-320w.webp 320w, /products/qiyun-cork-roller-640w.webp 640w",
+    "bytesBefore": 796096,
+    "bytesAfter": 24230
+  },
+  "/products/round-cotton-cushion.png": {
+    "src": "/products/round-cotton-cushion-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/round-cotton-cushion-320w.webp 320w, /products/round-cotton-cushion-640w.webp 640w",
+    "bytesBefore": 832449,
+    "bytesAfter": 5426
+  },
+  "/products/short-five-toe-socks.jpg": {
+    "src": "/products/short-five-toe-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/short-five-toe-socks-320w.webp 320w, /products/short-five-toe-socks-640w.webp 640w",
+    "bytesBefore": 35357,
+    "bytesAfter": 19106
+  },
+  "/products/shoulder-resistance-band.jpg": {
+    "src": "/products/shoulder-resistance-band-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/shoulder-resistance-band-320w.webp 320w, /products/shoulder-resistance-band-640w.webp 640w",
+    "bytesBefore": 472943,
+    "bytesAfter": 26716
+  },
+  "/products/silicone-dumbbell.png": {
+    "src": "/products/silicone-dumbbell-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/silicone-dumbbell-320w.webp 320w, /products/silicone-dumbbell-640w.webp 640w",
+    "bytesBefore": 230481,
+    "bytesAfter": 7188
+  },
+  "/products/silicone-fitness-gloves.png": {
+    "src": "/products/silicone-fitness-gloves-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/silicone-fitness-gloves-320w.webp 320w, /products/silicone-fitness-gloves-640w.webp 640w",
+    "bytesBefore": 1490866,
+    "bytesAfter": 55078
+  },
+  "/products/silicone-grip-socks.jpg": {
+    "src": "/products/silicone-grip-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/silicone-grip-socks-320w.webp 320w, /products/silicone-grip-socks-640w.webp 640w",
+    "bytesBefore": 27679,
+    "bytesAfter": 9804
+  },
+  "/products/silicone-peanut-ball.png": {
+    "src": "/products/silicone-peanut-ball-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/silicone-peanut-ball-320w.webp 320w, /products/silicone-peanut-ball-640w.webp 640w",
+    "bytesBefore": 299911,
+    "bytesAfter": 8968
+  },
+  "/products/silicone-resistance-band.png": {
+    "src": "/products/silicone-resistance-band-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/silicone-resistance-band-320w.webp 320w, /products/silicone-resistance-band-640w.webp 640w",
+    "bytesBefore": 603378,
+    "bytesAfter": 26486
+  },
+  "/products/soccer-grip-socks.jpg": {
+    "src": "/products/soccer-grip-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/soccer-grip-socks-320w.webp 320w, /products/soccer-grip-socks-640w.webp 640w",
+    "bytesBefore": 65998,
+    "bytesAfter": 28226
+  },
+  "/products/summer-yoga-socks.jpg": {
+    "src": "/products/summer-yoga-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/summer-yoga-socks-320w.webp 320w, /products/summer-yoga-socks-640w.webp 640w",
+    "bytesBefore": 642522,
+    "bytesAfter": 42840
+  },
+  "/products/thin-performance-socks.jpg": {
+    "src": "/products/thin-performance-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/thin-performance-socks-320w.webp 320w, /products/thin-performance-socks-640w.webp 640w",
+    "bytesBefore": 37375,
+    "bytesAfter": 14086
+  },
+  "/products/toe-cross-back-socks.jpg": {
+    "src": "/products/toe-cross-back-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/toe-cross-back-socks-320w.webp 320w, /products/toe-cross-back-socks-640w.webp 640w",
+    "bytesBefore": 30498,
+    "bytesAfter": 11236
+  },
+  "/products/tpe-resistance-band.jpg": {
+    "src": "/products/tpe-resistance-band-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/tpe-resistance-band-320w.webp 320w, /products/tpe-resistance-band-640w.webp 640w",
+    "bytesBefore": 576277,
+    "bytesAfter": 21852
+  },
+  "/products/waist-support-corset.jpg": {
+    "src": "/products/waist-support-corset-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/waist-support-corset-320w.webp 320w, /products/waist-support-corset-640w.webp 640w",
+    "bytesBefore": 65921,
+    "bytesAfter": 23660
+  },
+  "/products/women-tennis-skort.png": {
+    "src": "/products/women-tennis-skort-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/women-tennis-skort-320w.webp 320w, /products/women-tennis-skort-640w.webp 640w",
+    "bytesBefore": 1263417,
+    "bytesAfter": 36774
+  },
+  "/products/women-yoga-socks.jpg": {
+    "src": "/products/women-yoga-socks-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/women-yoga-socks-320w.webp 320w, /products/women-yoga-socks-640w.webp 640w",
+    "bytesBefore": 40750,
+    "bytesAfter": 22398
+  },
+  "/products/yoga-2piece-set.jpg": {
+    "src": "/products/yoga-2piece-set-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/yoga-2piece-set-320w.webp 320w, /products/yoga-2piece-set-640w.webp 640w",
+    "bytesBefore": 119063,
+    "bytesAfter": 16208
+  },
+  "/products/yoga-towel-ultrafine.png": {
+    "src": "/products/yoga-towel-ultrafine-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/yoga-towel-ultrafine-320w.webp 320w, /products/yoga-towel-ultrafine-640w.webp 640w",
+    "bytesBefore": 706990,
+    "bytesAfter": 19688
+  },
+  "/products/zafu-meditation-cushion.png": {
+    "src": "/products/zafu-meditation-cushion-640w.webp",
+    "width": 640,
+    "height": 640,
+    "srcSet": "/products/zafu-meditation-cushion-320w.webp 320w, /products/zafu-meditation-cushion-640w.webp 640w",
+    "bytesBefore": 1160621,
+    "bytesAfter": 42314
+  },
+  "/images/about-studio.jpg": {
+    "src": "/images/about-studio-960w.webp",
+    "width": 960,
+    "height": 640,
+    "srcSet": "/images/about-studio-640w.webp 640w, /images/about-studio-960w.webp 960w",
+    "bytesBefore": 115064,
+    "bytesAfter": 72624
+  },
+  "/images/banner.jpg": {
+    "src": "/images/banner-1120w.webp",
+    "width": 1120,
+    "height": 1302,
+    "srcSet": "/images/banner-480w.webp 480w, /images/banner-768w.webp 768w, /images/banner-1120w.webp 1120w",
+    "bytesBefore": 1494162,
+    "bytesAfter": 200010
+  },
+  "/images/contact-cta.jpg": {
+    "src": "/images/contact-cta-1280w.webp",
+    "width": 1280,
+    "height": 853,
+    "srcSet": "/images/contact-cta-640w.webp 640w, /images/contact-cta-960w.webp 960w, /images/contact-cta-1280w.webp 1280w",
+    "bytesBefore": 241412,
+    "bytesAfter": 90678
+  },
+  "/images/hero.png": {
+    "src": "/images/hero-1280w.webp",
+    "width": 1280,
+    "height": 720,
+    "srcSet": "/images/hero-640w.webp 640w, /images/hero-960w.webp 960w, /images/hero-1280w.webp 1280w",
+    "bytesBefore": 207490,
+    "bytesAfter": 71540
+  },
+  "/images/oem-logos.jpg": {
+    "src": "/images/oem-logos.webp",
+    "width": 640,
+    "height": 427,
+    "bytesBefore": 50478,
+    "bytesAfter": 9546
+  },
+  "/images/oem-moq.jpg": {
+    "src": "/images/oem-moq.webp",
+    "width": 640,
+    "height": 426,
+    "bytesBefore": 164583,
+    "bytesAfter": 68368
+  },
+  "/images/oem-packaging.jpg": {
+    "src": "/images/oem-packaging.webp",
+    "width": 640,
+    "height": 426,
+    "bytesBefore": 57192,
+    "bytesAfter": 10632
+  },
+  "/images/oem-private-label.jpg": {
+    "src": "/images/oem-private-label.webp",
+    "width": 640,
+    "height": 360,
+    "bytesBefore": 114511,
+    "bytesAfter": 41222
+  },
+  "/images/og.jpg": {
+    "src": "/images/og-960w.webp",
+    "width": 960,
+    "height": 504,
+    "srcSet": "/images/og-640w.webp 640w, /images/og-960w.webp 960w",
+    "bytesBefore": 68883,
+    "bytesAfter": 31404
+  },
+  "/images/process-materials.jpg": {
+    "src": "/images/process-materials.webp",
+    "width": 640,
+    "height": 426,
+    "bytesBefore": 65563,
+    "bytesAfter": 19510
+  },
+  "/images/process-quality.jpg": {
+    "src": "/images/process-quality.webp",
+    "width": 640,
+    "height": 426,
+    "bytesBefore": 69580,
+    "bytesAfter": 19608
+  },
+  "/images/process-sample.jpg": {
+    "src": "/images/process-sample.webp",
+    "width": 640,
+    "height": 427,
+    "bytesBefore": 109620,
+    "bytesAfter": 42520
+  }
+}

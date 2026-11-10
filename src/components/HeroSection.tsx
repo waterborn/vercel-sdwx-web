@@ -1,15 +1,24 @@
 import Link from "next/link";
+import { asset } from "@/data/images";
 
 /* ── Hero — full-bleed image with overlaid headline, Manduka-style ── */
 export default function HeroSection() {
+  const hero = asset("/images/hero.png");
+
   return (
     <section className="relative min-h-[78vh] md:min-h-[88vh] flex items-end md:items-center overflow-hidden">
       {/* Background — official brand cover; anchored right so the model stays in frame on narrow screens */}
       <img
-        src="/images/hero.png"
+        src={hero.src}
+        srcSet={hero.srcSet}
+        sizes="(min-width: 768px) 1280px, 100vw"
+        width={hero.width}
+        height={hero.height}
         alt=""
         aria-hidden
+        loading="eager"
         fetchPriority="high"
+        decoding="sync"
         className="absolute inset-0 w-full h-full object-cover object-[74%_50%] md:object-center"
       />
       {/* Readability scrim — flat on mobile where the copy spans the whole image, gradient on desktop */}

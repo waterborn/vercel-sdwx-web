@@ -50,6 +50,12 @@ export default function ProductRail({
     rail.scrollBy({ left: direction * rail.clientWidth * 0.85, behavior: "smooth" });
   };
 
+  const goTo = (index: number) => {
+    const rail = railRef.current;
+    if (!rail) return;
+    rail.scrollTo({ left: index * rail.clientWidth, behavior: "smooth" });
+  };
+
   const onScroll = () => {
     const rail = railRef.current;
     if (!rail) return;
@@ -87,12 +93,12 @@ export default function ProductRail({
             onScroll={onScroll}
             className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-2"
           >
-            {products.map((product) => (
+            {products.map((product, i) => (
               <div
                 key={product.id}
                 className="snap-start shrink-0 w-[72%] sm:w-[46%] md:w-[31%] lg:w-[calc((100%-96px)/5)]"
               >
-                <ProductCard product={product} />
+                <ProductCard product={product} priority={i < 5} />
               </div>
             ))}
           </div>
@@ -121,15 +127,23 @@ export default function ProductRail({
             </button>
           </div>
 
-          {/* Dot indicators */}
-          <div className="flex items-center justify-center gap-2 mt-6">
+          {/* Dot indicators — real buttons with a 44px hit area */}
+          <div className="flex items-center justify-center gap-1 mt-6">
             {Array.from({ length: dots }).map((_, i) => (
-              <span
+              <button
                 key={i}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === page ? "w-6 bg-brand-black" : "w-1.5 bg-brand-black/25"
-                }`}
-              />
+                type="button"
+                onClick={() => goTo(i)}
+                aria-label={`Go to product page ${i + 1} of ${dots}`}
+                aria-current={i === page ? "true" : undefined}
+                className="flex items-center justify-center w-8 h-11 -my-[13px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+              >
+                <span
+                  className={`block h-1.5 rounded-full transition-all duration-300 ${
+                    i === page ? "w-6 bg-brand-black" : "w-1.5 bg-brand-black/25"
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </div>

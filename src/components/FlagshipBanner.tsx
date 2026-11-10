@@ -1,6 +1,11 @@
 import Link from "next/link";
+import { asset } from "@/data/images";
 
-/* ── Flagship banner — full-width image with overlaid copy ── */
+/* ── Flagship banner — full-width image with overlaid copy ──
+   The photograph is scenery behind a dark overlay, so it renders as a lazy
+   <img> with a width ladder instead of a CSS background: a background image is
+   discovered only after the stylesheet parses and always downloads the largest
+   variant, which was the single heaviest asset on the homepage. */
 export default function FlagshipBanner({
   image,
   eyebrow,
@@ -16,11 +21,20 @@ export default function FlagshipBanner({
   ctaLabel: string;
   ctaHref: string;
 }) {
+  const cover = asset(image, 1280);
+
   return (
     <section className="relative min-h-[60vh] md:min-h-[72vh] flex items-center overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url('${image}')` }}
+      <img
+        src={cover.src}
+        srcSet={cover.srcSet}
+        sizes="100vw"
+        width={cover.width}
+        height={cover.height}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 w-full h-full object-cover"
       />
       <div className="absolute inset-0 bg-brand-black/45" />
 

@@ -2,7 +2,7 @@
 
 export const company = {
   name: "Shanghai Shandong Wuxian Technology Co., Ltd.",
-  brand: "Glintic",
+  brand: "GLINTIC",
   tagline: "Support Engineered. Performance Delivered.",
   location: "Shanghai, China",
   founded: "2026",
@@ -19,7 +19,7 @@ export const company = {
   responseTime: "≤ 1 hour",
   email: "contact@glintic.com",
   intro: [
-    "Glintic is a Shanghai-based manufacturer specializing in athletic support gear and technical yoga equipment. We serve global sports brands, fitness retailers, and wellness studios with products engineered for joint protection, muscle stabilization, and performance enhancement.",
+    "GLINTIC is a Shanghai-based manufacturer specializing in athletic support gear and technical yoga equipment. We serve global sports brands, fitness retailers, and wellness studios with products engineered for joint protection, muscle stabilization, and performance enhancement.",
     "With a core support-gear facility and a vetted partner network, we deliver a one-stop Sports Support & Yoga Ecosystem across six major product lines.",
   ],
 };

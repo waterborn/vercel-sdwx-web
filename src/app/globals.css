@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* ── Glintic design tokens — inspired by Manduka EU ── */
+/* ── GLINTIC design tokens — inspired by Manduka EU ── */
 :root {
   --background: #ffffff;
   --foreground: #011f31;
@@ -23,6 +23,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* keep anchor targets clear of the announcement bar + sticky navbar */
+  scroll-padding-top: 6.5rem;
 }
 
 body {
@@ -30,6 +32,12 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Keyboard focus ring (mouse clicks stay clean) */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
 }
 
 /* Underlined text link (Manduka-style) */
@@ -42,6 +50,16 @@ body {
 
 .link-underline:hover {
   text-decoration-thickness: 2px;
+}
+
+/* Touch devices: text links have no padding of their own, so give every
+   standalone link a 44px tall hit area without changing desktop spacing. */
+@media (pointer: coarse) {
+  .link-underline {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
 }
 
 /* Scroll reveal animations */
@@ -75,4 +93,38 @@ body {
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* Scroll reveal is progressive enhancement: without JS (crawlers, print,
+   scripting-disabled browsers) the content must never stay invisible. */
+@media (scripting: none), print {
+  .fade-in-up,
+  .fade-in {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Respect the OS "reduce motion" setting */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* reveal-on-scroll elements render immediately */
+  .fade-in-up,
+  .fade-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

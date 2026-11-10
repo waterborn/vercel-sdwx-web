@@ -42,6 +42,9 @@ yarn-error.log*
 # research reference screenshots
 /scripts/reference/
 
+# unoptimized source imagery kept locally for re-encoding
+/scripts/raw-images/
+
 # ide
 /.qoder/
 

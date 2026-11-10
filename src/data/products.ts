@@ -18,6 +18,8 @@ export type Product = {
   priceMax: number | null;
   image: string;
   badge?: string;
+  /** Supplier storefront product page; null when no listing could be matched. */
+  url: string | null;
 };
 
 export const products: Product[] = rawProducts.map((p) => ({
@@ -28,6 +30,7 @@ export const products: Product[] = rawProducts.map((p) => ({
   priceMax: p.priceMax,
   image: p.file,
   badge: p.badge ?? undefined,
+  url: p.detailUrl ?? null,
 }));
 
 export const categories: {

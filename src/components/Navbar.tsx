@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { categories } from "@/data/products";
 
-/* ── Navigation bar — white, centered wordmark, Manduka-style ── */
+/* ── Navigation bar — white, centered wordmark, Manduka-style.
+   Mobile drawer is a disclosure: collapsed content is inert (out of the tab
+   order), Escape closes it and focus returns to the toggle. ── */
 const NAV_ITEMS = [
   { label: "Shop All", href: "/products" },
   { label: "Categories", href: "/#categories" },
@@ -12,8 +14,31 @@ const NAV_ITEMS = [
   { label: "OEM / ODM", href: "/about#oem" },
 ];
 
+const linkClass =
+  "inline-flex items-center min-h-11 text-sm font-light tracking-[0.04em] text-ink hover:opacity-60 transition-opacity duration-300";
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [mobileOpen]);
 
   return (
     <nav className="sticky top-0 z-50 bg-brand-white/95 backdrop-blur-md border-b border-brand-black/10">
@@ -21,9 +46,13 @@ export default function Navbar() {
         {/* Left — hamburger (mobile) / menu (desktop) */}
         <div className="flex items-center">
           <button
-            className="md:hidden flex flex-col gap-1.5 p-2 -ml-2"
+            ref={toggleRef}
+            type="button"
+            className="md:hidden -ml-2 w-11 h-11 flex flex-col items-center justify-center gap-1.5"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
           >
             <span
               className={`block w-6 h-px bg-ink transition-transform duration-300 ${
@@ -41,13 +70,10 @@ export default function Navbar() {
               }`}
             />
           </button>
-          <ul className="hidden md:flex items-center gap-8">
+          <ul className="hidden md:flex items-center gap-6 lg:gap-8">
             {NAV_ITEMS.slice(0, 2).map((item) => (
               <li key={item.label}>
-                <Link
-                  href={item.href}
-                  className="text-sm font-light tracking-[0.04em] text-ink hover:opacity-60 transition-opacity duration-300"
-                >
+                <Link href={item.href} className={linkClass}>
                   {item.label}
                 </Link>
               </li>
@@ -58,20 +84,17 @@ export default function Navbar() {
         {/* Center — wordmark */}
         <Link
           href="/"
-          className="justify-self-center font-serif text-2xl md:text-3xl font-medium tracking-[0.32em] lowercase text-ink"
+          className="justify-self-center inline-flex items-center min-h-11 font-serif text-2xl md:text-3xl font-medium tracking-[0.28em] text-ink"
         >
-          glintic
+          GLINTIC
         </Link>
 
         {/* Right — links / CTA */}
-        <div className="flex items-center justify-end gap-8">
-          <ul className="hidden md:flex items-center gap-8">
+        <div className="flex items-center justify-end gap-6 lg:gap-8">
+          <ul className="hidden md:flex items-center gap-6 lg:gap-8">
             {NAV_ITEMS.slice(2).map((item) => (
               <li key={item.label}>
-                <Link
-                  href={item.href}
-                  className="text-sm font-light tracking-[0.04em] text-ink hover:opacity-60 transition-opacity duration-300"
-                >
+                <Link href={item.href} className={linkClass}>
                   {item.label}
                 </Link>
               </li>
@@ -79,8 +102,8 @@ export default function Navbar() {
           </ul>
           <Link
             href="/products"
-            aria-label="Search products"
-            className="sm:hidden p-2 -mr-2 text-ink"
+            aria-label="Browse product catalog"
+            className="sm:hidden -mr-2 w-11 h-11 inline-flex items-center justify-center text-ink"
           >
             <svg
               className="w-5 h-5"
@@ -88,6 +111,7 @@ export default function Navbar() {
               stroke="currentColor"
               strokeWidth={1.5}
               viewBox="0 0 24 24"
+              aria-hidden
             >
               <path
                 strokeLinecap="round"
@@ -98,7 +122,7 @@ export default function Navbar() {
           </Link>
           <a
             href="mailto:contact@glintic.com"
-            className="hidden sm:inline-block bg-brand-black text-brand-white text-xs tracking-[0.12em] uppercase px-5 py-2.5 hover:bg-ink transition-colors duration-300"
+            className="hidden sm:inline-flex items-center min-h-11 bg-brand-black text-brand-white text-xs tracking-[0.12em] uppercase px-5 hover:bg-ink transition-colors duration-300"
           >
             Contact
           </a>
@@ -107,16 +131,18 @@ export default function Navbar() {
 
       {/* Mobile drawer */}
       <div
+        id="mobile-menu"
+        inert={!mobileOpen}
         className={`md:hidden overflow-y-auto no-scrollbar transition-all duration-500 bg-brand-white border-t border-brand-black/5 ${
           mobileOpen ? "max-h-[calc(100vh-3.5rem)]" : "max-h-0 border-t-0"
         }`}
       >
-        <ul className="flex flex-col items-center gap-6 pt-8 pb-2">
+        <ul className="flex flex-col items-center gap-1 pt-6 pb-2">
           {NAV_ITEMS.map((item) => (
             <li key={item.label}>
               <Link
                 href={item.href}
-                className="text-sm tracking-[0.12em] uppercase text-ink"
+                className="inline-flex items-center min-h-11 text-sm tracking-[0.12em] uppercase text-ink"
                 onClick={() => setMobileOpen(false)}
               >
                 {item.label}
@@ -126,26 +152,26 @@ export default function Navbar() {
         </ul>
 
         {/* Collections — six category anchors */}
-        <div className="px-8 pt-6 pb-8">
+        <div className="px-8 pt-4 pb-8">
           <p className="text-[10px] tracking-[0.24em] uppercase text-ink/40 text-center mb-4">
             Collections
           </p>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1">
             {categories.map((category) => (
               <Link
                 key={category.slug}
                 href={`/products?cat=${category.slug}`}
-                className="text-xs font-light text-ink/75 hover:text-ink text-center leading-snug"
+                className="inline-flex items-center justify-center min-h-11 text-xs font-light text-ink/75 hover:text-ink text-center leading-snug"
                 onClick={() => setMobileOpen(false)}
               >
                 {category.name}
               </Link>
             ))}
           </div>
-          <div className="text-center mt-7">
+          <div className="text-center mt-6">
             <a
               href="mailto:contact@glintic.com"
-              className="inline-block bg-brand-black text-brand-white text-xs tracking-[0.12em] uppercase px-6 py-3"
+              className="inline-flex items-center min-h-11 bg-brand-black text-brand-white text-xs tracking-[0.12em] uppercase px-6 py-3"
               onClick={() => setMobileOpen(false)}
             >
               Contact Us

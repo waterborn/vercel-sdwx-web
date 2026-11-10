@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { company, stats } from "@/data/company";
+import { asset } from "@/data/images";
 
 /* ── About summary — two-column intro with stats, links to /about ── */
 export default function AboutSummary() {
+  const studio = asset("/images/about-studio.jpg");
+
   return (
     <section className="py-16 md:py-24 bg-soft-gray">
       <div className="max-w-7xl mx-auto px-6">
@@ -10,9 +13,14 @@ export default function AboutSummary() {
           {/* Image */}
           <div className="aspect-[4/5] overflow-hidden bg-brand-white">
             <img
-              src="/images/about-studio.jpg"
-              alt="Glintic studio"
+              src={studio.src}
+              srcSet={studio.srcSet}
+              sizes="(min-width: 768px) 46vw, 92vw"
+              width={studio.width}
+              height={studio.height}
+              alt="GLINTIC studio"
               loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover"
             />
           </div>
@@ -20,7 +28,7 @@ export default function AboutSummary() {
           {/* Copy */}
           <div>
             <p className="text-[11px] tracking-[0.28em] uppercase text-ink/50 mb-4">
-              About Glintic
+              About GLINTIC
             </p>
             <h2 className="font-serif text-3xl md:text-5xl font-light leading-[1.12] tracking-[0.03em] text-ink mb-6">
               One Supplier,

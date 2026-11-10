@@ -13,6 +13,15 @@ export function useScrollAnimation() {
     const el = ref.current;
     if (!el) return;
 
+    // Graceful degradation: no observer means no reveal gate — show everything.
+    if (typeof IntersectionObserver === "undefined") {
+      el.classList.add("visible");
+      el.querySelectorAll(".fade-in-up, .fade-in").forEach((child) =>
+        child.classList.add("visible")
+      );
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

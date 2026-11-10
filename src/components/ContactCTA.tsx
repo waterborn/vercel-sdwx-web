@@ -1,4 +1,5 @@
 import { company } from "@/data/company";
+import { bgImage } from "@/data/images";
 
 /* ── Contact CTA — full-width image band ── */
 export default function ContactCTA() {
@@ -7,7 +8,7 @@ export default function ContactCTA() {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/images/contact-cta.jpg')",
+          backgroundImage: bgImage("/images/contact-cta.jpg"),
         }}
       />
       <div className="absolute inset-0 bg-brand-black/50" />

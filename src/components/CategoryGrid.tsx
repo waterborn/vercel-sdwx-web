@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { categories } from "@/data/products";
+import { asset } from "@/data/images";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-/* ── Category grid — "Explore by Category", edge-to-edge image tiles ── */
+/* ── Category grid — "Explore by Category", edge-to-edge image tiles.
+   One link per tile (image + name + tagline) so tab order stays clean. ── */
 export default function CategoryGrid() {
   const ref = useScrollAnimation();
 
@@ -18,36 +20,39 @@ export default function CategoryGrid() {
 
       {/* Full-row grid: inset 32px from both edges, hairline seams between tiles */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-1 md:gap-x-2 gap-y-8 md:gap-y-10 px-8">
-        {categories.map((category, i) => (
-          <div
-            key={category.slug}
-            className="group text-center fade-in-up"
-            style={{ transitionDelay: `${(i % 3) * 0.1}s` }}
-          >
+        {categories.map((category, i) => {
+          const image = asset(category.image);
+          return (
             <Link
+              key={category.slug}
               href={`/products?cat=${category.slug}`}
-              className="block aspect-square overflow-hidden bg-soft-gray"
+              className="group text-center fade-in-up focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
+              style={{ transitionDelay: `${(i % 3) * 0.1}s` }}
             >
-              <img
-                src={category.image}
-                alt={category.name}
-                loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
+              <span className="block aspect-square overflow-hidden bg-soft-gray">
+                <img
+                  src={image.src}
+                  srcSet={image.srcSet}
+                  sizes="(min-width: 1024px) 200px, 45vw"
+                  width={image.width}
+                  height={image.height}
+                  alt={category.name}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </span>
+              <span className="block mt-4 md:mt-5 px-2">
+                <span className="link-underline text-sm md:text-base font-light tracking-[0.02em] text-ink">
+                  {category.name}
+                </span>
+                <span className="hidden md:block mt-2 text-xs font-light text-ink/50">
+                  {category.tagline}
+                </span>
+              </span>
             </Link>
-            <div className="mt-4 md:mt-5 px-2">
-              <Link
-                href={`/products?cat=${category.slug}`}
-                className="link-underline text-sm md:text-base font-light tracking-[0.02em] text-ink"
-              >
-                {category.name}
-              </Link>
-              <p className="hidden md:block mt-2 text-xs font-light text-ink/50">
-                {category.tagline}
-              </p>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
