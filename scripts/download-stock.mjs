@@ -3,8 +3,9 @@
 import { mkdir, writeFile } from "node:fs/promises";
 
 const IMAGES = {
-  "hero.jpg":
-    "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&q=80",
+  // Homepage cover — official brand asset from the supplier storefront
+  "hero.png":
+    "https://sc02.alicdn.com/kf/Aee3495fbfbcb41198dd5d70be042b232y.png",
   "contact-cta.jpg":
     "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?w=1920&q=80",
   "banner.jpg":
@@ -33,7 +34,10 @@ await mkdir(OUT, { recursive: true });
 let ok = 0;
 for (const [file, url] of Object.entries(IMAGES)) {
   const res = await fetch(url, {
-    headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" },
+    headers: {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+      Referer: "https://shandongwuxian.en.alibaba.com/",
+    },
   });
   if (!res.ok) {
     console.error(`FAILED ${file} → HTTP ${res.status}`);

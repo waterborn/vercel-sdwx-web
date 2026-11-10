@@ -4,14 +4,17 @@ import Link from "next/link";
 export default function HeroSection() {
   return (
     <section className="relative min-h-[78vh] md:min-h-[88vh] flex items-end md:items-center overflow-hidden">
-      {/* Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/images/hero.jpg')",
-        }}
+      {/* Background — official brand cover; anchored right so the model stays in frame on narrow screens */}
+      <img
+        src="/images/hero.png"
+        alt=""
+        aria-hidden
+        fetchPriority="high"
+        className="absolute inset-0 w-full h-full object-cover object-[74%_50%] md:object-center"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-brand-black/55 via-brand-black/25 to-transparent" />
+      {/* Readability scrim — flat on mobile where the copy spans the whole image, gradient on desktop */}
+      <div className="absolute inset-0 bg-brand-black/45 md:hidden" />
+      <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-brand-black/70 via-brand-black/30 to-transparent" />
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pb-16 md:pb-0">

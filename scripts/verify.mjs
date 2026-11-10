@@ -34,7 +34,10 @@ try {
     await page.evaluate((t) => {
       const els = Array.from(document.querySelectorAll("h1, h2"));
       const target = els.find((el) => el.textContent?.includes(t));
-      target?.scrollIntoView({ block: "start" });
+      if (!target) return;
+      // Absolute jump — smooth scrolling would fight the follow-up screenshot
+      const y = target.getBoundingClientRect().top + window.scrollY - 96;
+      window.scrollTo({ top: y, behavior: "instant" });
     }, text);
     await new Promise((r) => setTimeout(r, 900));
     await page.screenshot({ path: `${OUT}/${file}` });
@@ -63,6 +66,39 @@ try {
   });
   await new Promise((r) => setTimeout(r, 900));
   await page.screenshot({ path: `${OUT}/home-full.png`, fullPage: true });
+
+  // Side insets of every full-row grid (should be >= 30px on both sides)
+  const insets = await page.evaluate(() => {
+    const viewport = document.documentElement.clientWidth;
+    return Array.from(document.querySelectorAll('[class*="px-8"]'))
+      .filter(
+        (el) =>
+          typeof el.className === "string" &&
+          el.className.includes("grid") &&
+          el.children.length > 0
+      )
+      .map((el) => {
+        // Measure the first/last tile, not the padded wrapper
+        const first = el.children[0].getBoundingClientRect();
+        const last = el.children[el.children.length - 1].getBoundingClientRect();
+        return `${Math.round(first.left)}/${Math.round(viewport - last.right)}`;
+      });
+  });
+
+  // Featured rail geometry: left inset, card width, cards per view
+  const railInfo = await page.evaluate(() => {
+    const rail = document.querySelector(".snap-x");
+    if (!rail) return null;
+    const cards = Array.from(rail.children).map((c) => c.getBoundingClientRect());
+    const viewport = document.documentElement.clientWidth;
+    return {
+      padLeft: getComputedStyle(rail).paddingLeft,
+      firstLeft: Math.round(cards[0].left),
+      cardWidth: Math.round(cards[0].width),
+      lastRightGap: Math.round(viewport - cards[cards.length - 1].right),
+      visible: cards.filter((c) => c.left >= 0 && c.right <= viewport).length,
+    };
+  });
 
   // ── Products ──
   await page.goto(`${BASE}/products`, { waitUntil: "networkidle0", timeout: 60000 });
@@ -132,6 +168,12 @@ try {
   await new Promise((r) => setTimeout(r, 700));
   await page.screenshot({ path: `${OUT}/mobile-nav.png` });
 
+  // Close the drawer, then check the two full-bleed sections on mobile
+  await page.click('button[aria-label="Toggle menu"]');
+  await new Promise((r) => setTimeout(r, 600));
+  await shotSection("Explore by Category", "mobile-categories.png");
+  await shotSection("Featured Products", "mobile-featured.png");
+
   console.log(
     JSON.stringify(
       {
@@ -139,6 +181,8 @@ try {
         itemCount,
         cardCount,
         deepLink,
+        gridInsets: insets,
+        featuredRail: railInfo,
         consoleErrors: errors,
       },
       null,

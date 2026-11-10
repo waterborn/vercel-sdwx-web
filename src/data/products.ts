@@ -112,5 +112,5 @@ export const featured = [
   .map((id) => products.find((p) => p.id === id))
   .filter((p): p is Product => Boolean(p));
 
-/** Badge-bearing products for the 4-column homepage grid */
+/** Badge-bearing products for the full-row homepage grid (4 × 2 rows) */
 export const highlights = [...bestSellers, ...newArrivals].slice(0, 8);

@@ -5,7 +5,7 @@ import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import type { Product } from "@/data/products";
 
-/* ── Product rail — horizontal snap scroll with arrows + dot indicators ── */
+/* ── Product rail — edge-to-edge horizontal snap scroll with arrows + dots ── */
 export default function ProductRail({
   eyebrow,
   title,
@@ -60,26 +60,28 @@ export default function ProductRail({
 
   return (
     <section className="py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-10 md:mb-14">
-          {eyebrow && (
-            <p className="text-[11px] tracking-[0.28em] uppercase text-ink/50 mb-3">
-              {eyebrow}
-            </p>
-          )}
-          <h2 className="font-serif text-3xl md:text-5xl font-light tracking-[0.04em] text-ink">
-            {title}
-          </h2>
-          {description && (
-            <p className="mt-4 text-sm md:text-base font-light text-ink/65 max-w-xl mx-auto leading-relaxed">
-              {description}
-            </p>
-          )}
-        </div>
+      {/* Header */}
+      <div className="max-w-7xl mx-auto px-6 text-center mb-10 md:mb-14">
+        {eyebrow && (
+          <p className="text-[11px] tracking-[0.28em] uppercase text-ink/50 mb-3">
+            {eyebrow}
+          </p>
+        )}
+        <h2 className="font-serif text-3xl md:text-5xl font-light tracking-[0.04em] text-ink">
+          {title}
+        </h2>
+        {description && (
+          <p className="mt-4 text-sm md:text-base font-light text-ink/65 max-w-xl mx-auto leading-relaxed">
+            {description}
+          </p>
+        )}
+      </div>
 
-        {/* Rail */}
-        <div className="relative">
+      {/* Rail — inset 32px from both edges, five cards per view on desktop.
+          The inset lives on a wrapper: padding on the scroll container itself is
+          swallowed by scroll-snap alignment. */}
+      <div className="relative">
+        <div className="px-8">
           <div
             ref={railRef}
             onScroll={onScroll}
@@ -88,13 +90,15 @@ export default function ProductRail({
             {products.map((product) => (
               <div
                 key={product.id}
-                className="snap-start shrink-0 w-[72%] sm:w-[46%] md:w-[31%] lg:w-[23.5%]"
+                className="snap-start shrink-0 w-[72%] sm:w-[46%] md:w-[31%] lg:w-[calc((100%-96px)/5)]"
               >
                 <ProductCard product={product} />
               </div>
             ))}
           </div>
+        </div>
 
+        <div className="max-w-7xl mx-auto px-6">
           {/* Arrows */}
           <div className="hidden md:flex items-center justify-center gap-4 mt-8">
             <button
@@ -129,12 +133,12 @@ export default function ProductRail({
             ))}
           </div>
         </div>
+      </div>
 
-        <div className="text-center mt-8">
-          <Link href={viewAllHref} className="link-underline text-sm tracking-[0.06em] text-ink">
-            View All Products
-          </Link>
-        </div>
+      <div className="max-w-7xl mx-auto px-6 text-center mt-8">
+        <Link href={viewAllHref} className="link-underline text-sm tracking-[0.06em] text-ink">
+          View All Products
+        </Link>
       </div>
     </section>
   );
