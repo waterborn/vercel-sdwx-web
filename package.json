@@ -10,6 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "node scripts/test-site.mjs",
     "download-images": "node scripts/download-images.mjs",
     "download-stock": "node scripts/download-stock.mjs"
   },

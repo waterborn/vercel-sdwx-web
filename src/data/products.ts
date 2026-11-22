@@ -1,119 +1,108 @@
-import rawProducts from "../../scripts/products.json";
-
-/* ── Product catalog — sourced from the Alibaba supplier storefront ── */
-
-export type Category =
-  | "Recovery & Wellness Gear"
-  | "Sports Support & Braces"
-  | "Yoga & Pilates Accessories"
-  | "Yoga & Pilates Wear"
-  | "Aesthetic Fitness Equipment"
-  | "Studio Essentials";
-
-export type Product = {
-  id: string;
-  name: string;
-  category: Category;
-  priceMin: number;
-  priceMax: number | null;
-  image: string;
-  badge?: string;
-  /** Supplier storefront product page; null when no listing could be matched. */
-  url: string | null;
-};
-
-export const products: Product[] = rawProducts.map((p) => ({
-  id: p.id,
-  name: p.name,
-  category: p.category as Category,
-  priceMin: p.priceMin,
-  priceMax: p.priceMax,
-  image: p.file,
-  badge: p.badge ?? undefined,
-  url: p.detailUrl ?? null,
-}));
-
-export const categories: {
-  name: Category;
-  slug: string;
-  image: string;
-  tagline: string;
-}[] = [
-  {
-    name: "Recovery & Wellness Gear",
-    slug: "recovery-wellness-gear",
-    image: "/products/eva-foam-roller-53.jpg",
-    tagline: "Flagship line — rollers, massage balls & fascia care",
-  },
-  {
-    name: "Sports Support & Braces",
-    slug: "sports-support-braces",
-    image: "/products/knee-compression-sleeve.png",
-    tagline: "Joint protection engineered for movement",
-  },
-  {
-    name: "Yoga & Pilates Accessories",
-    slug: "yoga-pilates-accessories",
-    image: "/products/iyengar-yoga-strap.png",
-    tagline: "Straps, towels, blocks & balance tools",
-  },
-  {
-    name: "Yoga & Pilates Wear",
-    slug: "yoga-pilates-wear",
-    image: "/products/women-tennis-skort.png",
-    tagline: "Grip socks, skorts & studio apparel",
-  },
-  {
-    name: "Aesthetic Fitness Equipment",
-    slug: "aesthetic-fitness-equipment",
-    image: "/products/push-up-board-14in1.jpg",
-    tagline: "Dumbbells, bands & sculpted training tools",
-  },
-  {
-    name: "Studio Essentials",
-    slug: "studio-essentials",
-    image: "/products/iyengar-yoga-bolster.png",
-    tagline: "Bolsters, zafus & meditation props",
-  },
+// 前台仅包含目录信息；价格、来源与采集证据保留在 scripts/products.json。
+export const collections = [
+  { slug: "yoga-pilates-essentials", name: "Yoga & Pilates Essentials", shortName: "Essentials", image: "/products/eva-yoga-blocks.jpg", tagline: "The foundations of a considered practice.", range: "G-01 — G-04" },
+  { slug: "pilates-props-resistance", name: "Pilates Props & Resistance", shortName: "Pilates & Resistance", image: "/products/ankle-wrist-weights.png", tagline: "Small movements. A world of possibility.", range: "G-05 — G-09" },
+  { slug: "restorative-meditation", name: "Restorative & Meditation", shortName: "Restorative", image: "/products/iyengar-yoga-bolster.png", tagline: "Make room for a softer kind of strength.", range: "G-10 — G-14" },
+  { slug: "studio-hygiene-textiles", name: "Studio Hygiene & Textiles", shortName: "Textiles", image: "/products/women-yoga-socks.jpg", tagline: "Thoughtful details, from mat to movement.", range: "G-15 — G-17" },
+  { slug: "retail-merchandise", name: "Retail Corner & Merchandise", shortName: "Retail & Merchandise", image: "/products/mat-carrier-strap.png", tagline: "Take a little of your studio into the everyday.", range: "G-19 — G-20" },
+] as const;
+export type CollectionSlug = (typeof collections)[number]["slug"];
+export type Series = { id: string; name: string; collection: CollectionSlug; skuIds: string[]; note?: string; };
+export const series: Series[] = [
+  { id: "G-01", name: "Yoga Mat Series", collection: "yoga-pilates-essentials", skuIds: ["floor-exercise-mat"], note: "Foldable exercise mat candidate. Yoga mat specifications and material options require confirmation." },
+  { id: "G-02", name: "High-Density Yoga Blocks", collection: "yoga-pilates-essentials", skuIds: ["eva-yoga-blocks"], note: "EVA catalog option shown. Cork options require a separate sample and quotation." },
+  { id: "G-03", name: "Fascia & Lacrosse Massage Balls", collection: "yoga-pilates-essentials", skuIds: ["portable-massage-ball", "portable-silicone-massage-ball", "cork-fascia-ball", "oak-forest-cork-ball", "silicone-peanut-ball", "electric-peanut-ball"] },
+  { id: "G-04", name: "Soft Neoprene Hand Dumbbells", collection: "yoga-pilates-essentials", skuIds: ["silicone-dumbbell", "mini-dumbbells"], note: "Catalog candidates are silicone dumbbells, not verified neoprene products. Confirm the required material in your inquiry." },
+  { id: "G-05", name: "Resistance & Booty Bands", collection: "pilates-props-resistance", skuIds: ["silicone-resistance-band", "multi-loop-band", "latex-resistance-bands-set", "tpe-resistance-band", "hip-lifting-band", "shoulder-resistance-band", "latex-yoga-ropes"] },
+  { id: "G-06", name: "Pilates Magic Circle", collection: "pilates-props-resistance", skuIds: [] },
+  { id: "G-07", name: "Pilates Mini Stability Balls", collection: "pilates-props-resistance", skuIds: ["pvc-yoga-ball"] },
+  { id: "G-08", name: "High-Density Foam Rollers", collection: "pilates-props-resistance", skuIds: ["eva-foam-roller-53", "eva-foam-roller-camo", "qiyun-cork-roller", "cork-massage-roller"], note: "EVA foam and cork catalog variants are listed separately; cork is not foam." },
+  { id: "G-09", name: "Adjustable Ankle & Wrist Weights", collection: "pilates-props-resistance", skuIds: ["ankle-wrist-weights", "magnetic-wristband"], note: "Adjustment mechanisms and weight options are confirmed per SKU." },
+  { id: "G-10", name: "Yoga Straps & Stretching Belts", collection: "restorative-meditation", skuIds: ["iyengar-yoga-strap", "leg-stretching-strap"], note: "The catalog strap is described with a copper buckle. Other buckle materials require confirmation." },
+  { id: "G-11", name: "Yoga Bolsters", collection: "restorative-meditation", skuIds: ["iyengar-yoga-bolster"] },
+  { id: "G-12", name: "Studio Meditation Blankets", collection: "restorative-meditation", skuIds: [] },
+  { id: "G-13", name: "Eye Pillows", collection: "restorative-meditation", skuIds: [] },
+  { id: "G-14", name: "Ergonomic Meditation Cushions", collection: "restorative-meditation", skuIds: ["zafu-meditation-cushion", "crescent-meditation-pillow", "round-cotton-cushion"], note: "Zafu and cushion candidates shown. A separate Zabuton mat is not pictured." },
+  { id: "G-15", name: "Studio Non-Slip Grip Socks", collection: "studio-hygiene-textiles", skuIds: ["calf-strap-pilates-socks", "summer-yoga-socks", "pilates-yoga-socks", "five-toe-socks", "ballet-boat-socks", "toe-cross-back-socks", "silicone-grip-socks", "women-yoga-socks", "five-toe-pilates-socks", "mid-calf-five-toe-socks", "short-five-toe-socks"] },
+  { id: "G-16", name: "Microfiber Sweat Towels & Mat Towels", collection: "studio-hygiene-textiles", skuIds: ["yoga-towel-ultrafine", "microfiber-mat-towel", "bamboo-yoga-towel", "pilates-mat-cover-polka", "pilates-mat-cover-honeycomb"], note: "Bamboo-fiber, microfiber and mat-cover variants are not the same material." },
+  { id: "G-17", name: "Anti-Bacterial Equipment Cleaning Cloths", collection: "studio-hygiene-textiles", skuIds: [], note: "Requested antibacterial performance requires product-specific test evidence." },
+  { id: "G-19", name: "Stainless Steel Insulated Water Bottles", collection: "retail-merchandise", skuIds: [] },
+  { id: "G-20", name: "Canvas Studio Tote Bags & Mat Carry Straps", collection: "retail-merchandise", skuIds: ["mat-carrier-strap"], note: "A cotton mat carrier strap is pictured. Tote bags and 2-in-1 functionality require confirmation." },
 ];
-
-export const categoryBySlug = Object.fromEntries(
-  categories.map((c) => [c.slug, c.name])
-) as Record<string, Category>;
-
-export function formatPrice(product: Product): string {
-  const fmt = (n: number) =>
-    `$${n.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-  return product.priceMax && product.priceMax !== product.priceMin
-    ? `${fmt(product.priceMin)} - ${fmt(product.priceMax)}`
-    : fmt(product.priceMin);
-}
-
-export function productsByCategory(name: Category): Product[] {
-  return products.filter((p) => p.category === name);
-}
-
-export const bestSellers = products.filter((p) => p.badge === "Best Seller");
-export const newArrivals = products.filter((p) => p.badge === "New");
-
-/** Curated 10-product edit for the homepage featured rail */
-export const featured = [
-  "eva-foam-roller-53",
-  "silicone-peanut-ball",
-  "iyengar-yoga-bolster",
-  "women-yoga-socks",
-  "eva-yoga-blocks",
-  "latex-resistance-bands-set",
-  "women-tennis-skort",
-  "pilates-bar-set",
-  "cork-balance-board-set",
-  "microfiber-mat-towel",
-]
-  .map((id) => products.find((p) => p.id === id))
-  .filter((p): p is Product => Boolean(p));
-
-/** Badge-bearing products for the full-row homepage grid (4 × 2 rows) */
-export const highlights = [...bestSellers, ...newArrivals].slice(0, 8);
+export type Product = { id: string; name: string; image: string; specs: string; seriesId?: string; collection: CollectionSlug | "more"; category: string; };
+// 品名和规格仅作为现有目录参考，不构成已核验的性能或库存承诺。
+const catalog: [string, string, string, string][] = [
+  ["eva-foam-roller-53", "EVA Foam Roller", "jpg", "EVA · 53 cm"],
+  ["eva-foam-roller-camo", "Camo EVA Foam Roller", "jpg", "EVA · Camo finish"],
+  ["qiyun-cork-roller", "Natural Cork Yoga Roller", "jpg", "Cork · 10 × 40 cm"],
+  ["cork-massage-roller", "Coarse-Grain Cork Massage Roller", "png", "Cork · Coarse-grain finish"],
+  ["portable-massage-ball", "Portable Massage Ball", "png", "Portable fascia-release format"],
+  ["portable-silicone-massage-ball", "Silicone Massage Ball", "png", "Silicone · Portable format"],
+  ["cork-fascia-ball", "Cork Fascia Ball", "jpg", "Cork · 60 mm"],
+  ["oak-forest-cork-ball", "Natural Cork Massage Ball", "jpg", "Cork · Round format"],
+  ["silicone-peanut-ball", "Silicone Peanut Massage Ball", "png", "Silicone · 50 / 63 / 80 mm options"],
+  ["electric-peanut-ball", "Vibrating Peanut Massage Ball", "jpg", "Electric · Peanut format"],
+  ["knee-compression-sleeve", "Knee Compression Sleeve", "png", "Knee support · Size to be confirmed"],
+  ["waist-support-corset", "Mesh Waist Support Corset", "jpg", "Mesh · Waist support"],
+  ["pull-up-grips", "Pull-Up Grips", "png", "Cowhide · 3.5 mm"],
+  ["leg-stretching-strap", "Leg Stretching Strap", "png", "Foot-cradle format"],
+  ["fitness-gloves-women", "Half-Finger Fitness Gloves", "jpg", "Half-finger format"],
+  ["silicone-fitness-gloves", "Silicone Fitness Gloves", "png", "Silicone · Half-finger format"],
+  ["silicone-resistance-band", "Silicone Resistance Band", "png", "Silicone · 2 m"],
+  ["iyengar-yoga-strap", "Iyengar Yoga Strap", "png", "Cotton · Copper buckle"],
+  ["mat-carrier-strap", "Cotton Mat Carrier Strap", "png", "Cotton · Adjustable carrier"],
+  ["yoga-towel-ultrafine", "Ultra-Fine Yoga Towel", "png", "Mat-cover towel · 40 × 80 cm"],
+  ["microfiber-mat-towel", "Microfiber Mat Towel", "png", "Microfiber · 360 gsm"],
+  ["bamboo-yoga-towel", "Bamboo-Fiber Yoga Towel", "jpg", "Bamboo-fiber catalog option"],
+  ["eva-yoga-blocks", "High-Density EVA Yoga Blocks", "jpg", "EVA · 23 × 15 × 7.6 cm"],
+  ["floor-exercise-mat", "Foldable Exercise Mat", "png", "Foldable · Material to be confirmed"],
+  ["cork-balance-board-set", "Cork Balance Board Set", "jpg", "Cork · Board and column set"],
+  ["cork-half-ball", "Cork Half-Ball Balance Trainer", "png", "Cork · 25 / 30 cm options"],
+  ["pvc-yoga-ball", "Mini Stability Ball", "png", "PVC · 25 cm"],
+  ["zafu-meditation-cushion", "Round Zafu Meditation Cushion", "png", "Round · Embroidered cover"],
+  ["crescent-meditation-pillow", "Crescent Meditation Pillow", "png", "Cotton · Crescent format"],
+  ["round-cotton-cushion", "Round Yoga Cushion", "png", "Cotton · Round format"],
+  ["iyengar-yoga-bolster", "Iyengar Yoga Bolster", "png", "Cylindrical format"],
+  ["pilates-mat-cover-polka", "Polka-Dot Pilates Mat Cover", "png", "Microfiber · Polka-dot finish"],
+  ["pilates-mat-cover-honeycomb", "Honeycomb Pilates Mat Cover", "png", "Microfiber · Honeycomb finish"],
+  ["women-tennis-skort", "Two-in-One Tennis Skort", "png", "Skort · Two-in-one format"],
+  ["yoga-2piece-set", "Gym & Yoga Two-Piece Set", "jpg", "Two-piece apparel set"],
+  ["ballet-shoes", "Soft Ballet Shoes", "jpg", "Studio footwear"],
+  ["calf-strap-pilates-socks", "Calf-Strap Pilates Socks", "jpg", "Cotton · Calf-strap format"],
+  ["summer-yoga-socks", "Lightweight Yoga Socks", "jpg", "Lightweight knit format"],
+  ["soccer-grip-socks", "Soccer Grip Socks", "jpg", "Sports sock format"],
+  ["pilates-yoga-socks", "Pilates Grip Socks", "jpg", "Studio grip-sock format"],
+  ["bamboo-sports-socks", "Bamboo-Fiber Sports Socks", "jpg", "Bamboo-fiber catalog option"],
+  ["five-toe-socks", "Yoga Five-Toe Socks", "jpg", "Five-toe format"],
+  ["thin-performance-socks", "Thin Performance Socks", "jpg", "Thin sports-knit format"],
+  ["ballet-boat-socks", "Boat Ballet Yoga Socks", "png", "Cotton · Low-cut format"],
+  ["toe-cross-back-socks", "Cross-Back Yoga Socks", "jpg", "Short · Cross-back format"],
+  ["silicone-grip-socks", "Silicone-Grip Yoga Socks", "jpg", "Silicone grip · Studio format"],
+  ["women-yoga-socks", "Studio Yoga Socks", "jpg", "Studio grip-sock format"],
+  ["five-toe-pilates-socks", "Five-Toe Pilates Socks", "png", "Five-toe · Studio format"],
+  ["mid-calf-five-toe-socks", "Mid-Calf Five-Toe Socks", "jpg", "Five-toe · Mid-calf format"],
+  ["short-five-toe-socks", "Short Five-Toe Socks", "jpg", "Five-toe · Short format"],
+  ["silicone-dumbbell", "Silicone Hand Dumbbells", "png", "Silicone-coated iron · 1–2.5 kg options"],
+  ["mini-dumbbells", "Adjustable Mini Dumbbells", "png", "Silicone · Three-piece format"],
+  ["hand-grip-dumbbell", "Dumbbell-Shaped Hand Grip", "png", "Silicone · Hand-grip format"],
+  ["pilates-bar-set", "Portable Pilates Bar Set", "jpg", "TPE · Portable set"],
+  ["magnetic-wristband", "Magnetic Weighted Wristband", "png", "Silicone-coated iron · 0.5–2 kg options"],
+  ["ankle-wrist-weights", "Ankle & Wrist Weights", "png", "Silicone-coated iron · Adjustable format"],
+  ["eva-knee-pad", "Circular Yoga Knee Pad", "jpg", "EVA · Circular format"],
+  ["push-up-board-14in1", "Fourteen-in-One Push-Up Board", "jpg", "Foldable board format"],
+  ["push-up-board-color", "Color-Coded Push-Up Board", "jpg", "Foldable · Color-coded format"],
+  ["balance-board-round", "Round Balance Board", "jpg", "Round · Rotation format"],
+  ["shoulder-resistance-band", "Shoulder Resistance Band", "jpg", "Adjustable shoulder-training format"],
+  ["multi-loop-band", "Multi-Loop Resistance Band", "jpg", "Silicone · Multi-loop format"],
+  ["latex-resistance-bands-set", "Latex Resistance Band Set", "jpg", "Latex · Set format"],
+  ["tpe-resistance-band", "TPE Resistance Band", "jpg", "TPE · Five-color catalog options"],
+  ["latex-yoga-ropes", "Latex Yoga Ropes", "jpg", "Latex · 150 cm"],
+  ["hip-lifting-band", "Knitted Booty Band", "jpg", "Knitted band format"],
+];
+export const products: Product[] = catalog.map(([id, name, extension, specs]) => {
+  const group = series.find((entry) => entry.skuIds.includes(id));
+  return { id, name, image: `/products/${id}.${extension}`, specs, seriesId: group?.id, collection: group?.collection ?? "more", category: collections.find((entry) => entry.slug === group?.collection)?.name ?? "More From GLINTIC" };
+});
+export const madeToOrder = series.filter((entry) => entry.skuIds.length === 0);
+export const productById = Object.fromEntries(products.map((product) => [product.id, product]));
+export const seriesById = Object.fromEntries(series.map((entry) => [entry.id, entry]));

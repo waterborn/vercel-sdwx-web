@@ -1,32 +1,4 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
-/* ── Announcement bar — black strip with rotating messages ── */
-const MESSAGES = [
-  "OEM / ODM Customization — Low MOQ & 7-Day Prototyping",
-  "Samples Available Upon Request · Global Express, Air & Sea Freight",
-];
-
+import Link from "next/link";
 export default function AnnouncementBar() {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(
-      () => setIndex((i) => (i + 1) % MESSAGES.length),
-      5000
-    );
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <div className="bg-brand-black text-brand-white text-center py-2.5 px-4">
-      <p
-        key={index}
-        className="text-xs md:text-sm tracking-[0.08em] fade-in visible"
-      >
-        {MESSAGES[index]}
-      </p>
-    </div>
-  );
+  return <div className="bg-glintic-linen text-glintic-slate text-center px-4 py-2.5 text-[11px] sm:text-xs tracking-[.04em]">A considered collection for studios &amp; brands.<span className="hidden sm:inline"> From your first sample to your next chapter.</span>{" "}<Link href="/#sample-box" className="underline underline-offset-4 inline-flex items-center min-h-11 -my-3 ml-2">Explore the Sample Box →</Link></div>;
 }

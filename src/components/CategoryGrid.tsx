@@ -1,59 +1,9 @@
 "use client";
-
-import Link from "next/link";
-import { categories } from "@/data/products";
-import { asset } from "@/data/images";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-
-/* ── Category grid — "Explore by Category", edge-to-edge image tiles.
-   One link per tile (image + name + tagline) so tab order stays clean. ── */
+import Link from "next/link";
+import { collections } from "@/data/products";
+import { asset } from "@/data/images";
 export default function CategoryGrid() {
   const ref = useScrollAnimation();
-
-  return (
-    <section id="categories" ref={ref} className="py-16 md:py-24">
-      <div className="text-center mb-10 md:mb-16 px-6 fade-in-up">
-        <h2 className="font-serif text-3xl md:text-5xl font-light tracking-[0.04em] text-ink">
-          Explore by Category
-        </h2>
-      </div>
-
-      {/* Full-row grid: inset 32px from both edges, hairline seams between tiles */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-1 md:gap-x-2 gap-y-8 md:gap-y-10 px-8">
-        {categories.map((category, i) => {
-          const image = asset(category.image);
-          return (
-            <Link
-              key={category.slug}
-              href={`/products?cat=${category.slug}`}
-              className="group text-center fade-in-up focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
-              style={{ transitionDelay: `${(i % 3) * 0.1}s` }}
-            >
-              <span className="block aspect-square overflow-hidden bg-soft-gray">
-                <img
-                  src={image.src}
-                  srcSet={image.srcSet}
-                  sizes="(min-width: 1024px) 200px, 45vw"
-                  width={image.width}
-                  height={image.height}
-                  alt={category.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              </span>
-              <span className="block mt-4 md:mt-5 px-2">
-                <span className="link-underline text-sm md:text-base font-light tracking-[0.02em] text-ink">
-                  {category.name}
-                </span>
-                <span className="hidden md:block mt-2 text-xs font-light text-ink/50">
-                  {category.tagline}
-                </span>
-              </span>
-            </Link>
-          );
-        })}
-      </div>
-    </section>
-  );
+  return <section ref={ref} id="collections" className="section-space"><div className="studio-container"><div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-10"><div><p className="overline text-glintic-sage-dark mb-4">The considered collection</p><h2 className="section-title">Every corner of your studio.</h2><p className="lead text-glintic-muted mt-4 max-w-2xl">Five collections. One cohesive approach to sourcing the pieces that make your space feel like yours.</p></div><Link href="/products" className="link-underline ui-copy shrink-0">Browse all products ↗</Link></div><div className="grid sm:grid-cols-2 lg:grid-cols-12 gap-5">{collections.map((collection, index) => { const image = asset(collection.image); return <Link href={`/products?cat=${collection.slug}`} key={collection.slug} className={`collection-card group fade-in-up ${index < 2 ? "lg:col-span-6" : "lg:col-span-4"}`}><div className={`relative ${index < 2 ? "aspect-[2/1]" : "aspect-[4/3]"} bg-glintic-linen`}><img src={image.src} srcSet={image.srcSet} sizes="(min-width:1024px) 45vw, (min-width:640px) 46vw, 92vw" width={image.width} height={image.height} alt={collection.name + " catalog example"} loading="lazy" decoding="async" className="h-full w-full object-contain p-7 mix-blend-multiply" /><span className="absolute top-4 left-4 overline text-glintic-sage-dark rounded-full bg-glintic-sage-light px-3 py-2">Collection 0{index + 1}</span></div><div className="p-6"><p className="overline text-glintic-muted mb-3">{collection.range}</p><div className="flex justify-between gap-4"><h3 className="card-title">{collection.name}</h3><span aria-hidden="true" className="text-2xl text-glintic-sage-dark">↗</span></div><p className="text-glintic-muted text-sm mt-3">{collection.tagline}</p></div></Link>; })}</div></div></section>;
 }

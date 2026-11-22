@@ -1,62 +1,13 @@
 import Link from "next/link";
 import { asset } from "@/data/images";
-
-/* ── Hero — full-bleed image with overlaid headline, Manduka-style ── */
+import { RfqTrigger } from "@/components/RfqProvider";
 export default function HeroSection() {
-  const hero = asset("/images/hero.png");
-
-  return (
-    <section className="relative min-h-[78vh] md:min-h-[88vh] flex items-end md:items-center overflow-hidden">
-      {/* Background — official brand cover; anchored right so the model stays in frame on narrow screens */}
-      <img
-        src={hero.src}
-        srcSet={hero.srcSet}
-        sizes="(min-width: 768px) 1280px, 100vw"
-        width={hero.width}
-        height={hero.height}
-        alt=""
-        aria-hidden
-        loading="eager"
-        fetchPriority="high"
-        decoding="sync"
-        className="absolute inset-0 w-full h-full object-cover object-[74%_50%] md:object-center"
-      />
-      {/* Readability scrim — flat on mobile where the copy spans the whole image, gradient on desktop */}
-      <div className="absolute inset-0 bg-brand-black/45 md:hidden" />
-      <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-brand-black/70 via-brand-black/30 to-transparent" />
-
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pb-16 md:pb-0">
-        <div className="max-w-xl text-brand-white">
-          <p className="text-[11px] md:text-xs tracking-[0.32em] uppercase text-brand-white/80 mb-5">
-            Sports Support & Yoga Solutions
-          </p>
-          <h1 className="font-serif text-5xl md:text-7xl font-light leading-[1.05] tracking-[0.02em] mb-6">
-            Support Engineered.
-            <br />
-            Performance Delivered.
-          </h1>
-          <p className="text-sm md:text-base font-light leading-relaxed text-brand-white/85 max-w-md mb-9">
-            A one-stop Sports Support & Yoga Ecosystem — from recovery gear and
-            studio essentials to technical activewear, engineered in Shanghai
-            for brands worldwide.
-          </p>
-          <div className="flex flex-wrap items-center gap-4">
-            <Link
-              href="/products"
-              className="bg-brand-white text-brand-black text-xs tracking-[0.14em] uppercase px-8 py-3.5 rounded-[3px] hover:bg-brand-white/85 transition-colors duration-300"
-            >
-              Shop Now
-            </Link>
-            <Link
-              href="/about#oem"
-              className="border border-brand-white/70 text-brand-white text-xs tracking-[0.14em] uppercase px-8 py-3.5 rounded-[3px] hover:bg-brand-white hover:text-brand-black transition-colors duration-300"
-            >
-              OEM / ODM
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+  const image = asset("/images/hero.png", 1280);
+  return <section className="hero-panel relative overflow-hidden">
+    <div className="studio-container grid lg:grid-cols-12 items-center gap-10 lg:gap-4 py-12 lg:py-16">
+      <div className="lg:col-span-5 lg:pr-8 relative z-10"><p className="overline text-glintic-sage-dark mb-6">For spaces that inspire movement</p><h1 className="display-title">One-Stop Yoga &amp; Pilates Studio Supply &amp; Private Label Partner</h1><p className="lead text-glintic-slate mt-6 max-w-lg">Considered essentials. Your studio’s signature. A sourcing conversation that brings it all together.</p><div className="flex flex-wrap gap-3 mt-8"><Link href="/products" className="btn btn-primary">Explore the Collections <span aria-hidden="true">↗</span></Link><RfqTrigger className="btn btn-secondary">Request a Quote</RfqTrigger></div><div className="flex flex-wrap gap-2 mt-8" aria-label="Catalog features">{["5 Curated Collections", "SKU-Based Inquiries", "Sample Box Requests"].map((badge) => <span key={badge} className="overline text-glintic-sage-dark bg-glintic-sage-light rounded-full px-3 py-2.5 inline-flex gap-2"><span aria-hidden="true">✓</span>{badge}</span>)}</div></div>
+      <figure className="lg:col-span-7 relative"><div className="overflow-hidden rounded-t-[100px] rounded-b-xl lg:rounded-tl-[160px] lg:rounded-tr-xl aspect-[4/3] lg:aspect-[5/6]"><img src={image.src} srcSet={image.srcSet} sizes="(min-width:1280px) 760px, (min-width:1024px) 58vw, 100vw" width={image.width} height={image.height} alt="A quiet yoga practice in warm natural light" loading="eager" fetchPriority="high" decoding="async" className="w-full h-full object-cover object-[72%_center]" /></div><figcaption className="absolute bottom-5 left-5 right-5 bg-glintic-cream/95 backdrop-blur-md rounded-lg p-5 flex items-center justify-between gap-4"><span className="font-serif text-2xl lg:text-3xl">A practice. A place. A feeling.</span><span className="overline text-glintic-sage-dark hidden sm:block">The Studio Edit</span></figcaption></figure>
+    </div>
+    <div className="border-t border-glintic-line-dark"><div className="studio-container flex flex-wrap justify-between gap-4 py-5 text-xs text-glintic-slate"><span>For independent studios, wellness spaces &amp; brands</span><span>Yoga · Pilates · Restorative · Studio Textiles · Retail</span></div></div>
+  </section>;
 }

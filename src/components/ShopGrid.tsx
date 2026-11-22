@@ -1,305 +1,35 @@
 "use client";
-
-import { useCallback, useEffect, useState } from "react";
-import ProductCard from "@/components/ProductCard";
-import {
-  categories,
-  categoryBySlug,
-  products,
-  type Category,
-} from "@/data/products";
-
-/* ── Shop grid — category / price filtering, sorting and progressive loading.
-   The view lives in React state and is mirrored into the query string with
-   history.replaceState, so the page stays statically prerendered (the first 24
-   cards ship in the HTML) while deep links, refresh and back/forward all work. ── */
-const PAGE_SIZE = 24;
-
-const SORTS = [
-  { key: "featured", label: "Featured" },
-  { key: "price-asc", label: "Price: low to high" },
-  { key: "price-desc", label: "Price: high to low" },
-  { key: "name", label: "Name: A to Z" },
-] as const;
-
-type SortKey = (typeof SORTS)[number]["key"];
-
-type View = { cat: string; sort: SortKey; price: string; unknown: boolean };
-
-const DEFAULT_VIEW: View = {
-  cat: "all",
-  sort: "featured",
-  price: "all",
-  unknown: false,
-};
-
-function parseView(search: string): View {
-  const params = new URLSearchParams(search);
-  const rawCat = params.get("cat");
-  const known = Boolean(rawCat) && rawCat !== "all" && Boolean(categoryBySlug[rawCat!]);
-  const sort = params.get("sort") as SortKey | null;
-
-  return {
-    cat: known ? rawCat! : "all",
-    // a hand-typed or retired ?cat= still gets an honest message
-    unknown: Boolean(rawCat) && rawCat !== "all" && !known,
-    sort: SORTS.some((option) => option.key === sort) ? sort! : "featured",
-    price: params.get("price") ?? "all",
-  };
-}
-
-function serializeView(view: View): string {
-  const params = new URLSearchParams();
-  if (view.cat !== "all") params.set("cat", view.cat);
-  if (view.sort !== "featured") params.set("sort", view.sort);
-  if (view.price !== "all") params.set("price", view.price);
-  const query = params.toString();
-  return query ? `/products?${query}` : "/products";
-}
-
-const PRICE_BANDS = [
-  { key: "u1", label: "Under $1", min: 0, max: 1 },
-  { key: "1-3", label: "$1 – $3", min: 1, max: 3 },
-  { key: "3-6", label: "$3 – $6", min: 3, max: 6 },
-  { key: "6p", label: "$6 & above", min: 6, max: Number.POSITIVE_INFINITY },
-];
-
+import { useEffect, useState } from "react";
+import { collections, madeToOrder, series } from "@/data/products";
+import { catalogResults, initialView, PAGE_SIZE, parseView, sortOptions, viewUrl, type CatalogView } from "@/data/catalog-view";
+import ProductCard, { MadeToOrderCard } from "@/components/ProductCard";
+import { RfqTrigger } from "@/components/RfqProvider";
 export default function ShopGrid() {
-  const [view, setView] = useState<View>(DEFAULT_VIEW);
-  const [limit, setLimit] = useState(PAGE_SIZE);
-
-  /* Adopt the incoming URL after hydration (deep links, refresh, back/forward). */
+  // 初始 SSR 始终输出首批 24 张真实卡片，URL 在水合后同步。
+  const [view, setView] = useState<CatalogView>(initialView);
   useEffect(() => {
-    const sync = () => setView(parseView(window.location.search));
-    sync();
-    window.addEventListener("popstate", sync);
-    return () => window.removeEventListener("popstate", sync);
+    function restore() { const next = parseView(window.location.search); setView(next); window.history.replaceState(window.history.state, "", viewUrl(next, window.location.href)); }
+    const timer = window.setTimeout(restore, 0);
+    window.addEventListener("popstate", restore);
+    return () => { window.clearTimeout(timer); window.removeEventListener("popstate", restore); };
   }, []);
-
-  const update = useCallback((changes: Partial<Record<keyof View, string | null>>) => {
-    setView((current) => {
-      const next: View = { ...current, unknown: false };
-      if ("cat" in changes) next.cat = changes.cat ?? "all";
-      if ("price" in changes) next.price = changes.price ?? "all";
-      if ("sort" in changes) next.sort = (changes.sort as SortKey) ?? "featured";
-      return next;
-    });
-  }, []);
-
-  /* Mirror the view into the address bar; an unknown ?cat= disappears here too. */
-  useEffect(() => {
-    window.history.replaceState(null, "", serializeView(view));
-  }, [view]);
-
-  const viewKey = `${view.cat}|${view.sort}|${view.price}`;
-  // Reset the paging window whenever the view changes (render-phase adjust, no cascade).
-  const [lastViewKey, setLastViewKey] = useState(viewKey);
-  if (viewKey !== lastViewKey) {
-    setLastViewKey(viewKey);
-    setLimit(PAGE_SIZE);
-  }
-
-  const sortKey = view.sort;
-  const priceKey = view.price;
-  const unknownSlug = view.unknown;
-  const matched = categoryBySlug[view.cat] as Category | undefined;
-  const activeCategory: Category | "all" = matched ?? "all";
-
-  const band = PRICE_BANDS.find((b) => b.key === priceKey);
-
-  const filtered = products.filter((product) => {
-    if (activeCategory !== "all" && product.category !== activeCategory) return false;
-    if (band && !(product.priceMin < band.max && (product.priceMax ?? product.priceMin) >= band.min))
-      return false;
-    return true;
-  });
-
-  const sorted = [...filtered];
-  if (sortKey === "price-asc") sorted.sort((a, b) => a.priceMin - b.priceMin);
-  if (sortKey === "price-desc") sorted.sort((a, b) => b.priceMin - a.priceMin);
-  if (sortKey === "name") sorted.sort((a, b) => a.name.localeCompare(b.name));
-
-  const visible = sorted.slice(0, limit);
-  const heading = activeCategory === "all" ? "All Products" : activeCategory;
-
-  return (
-    <div>
-      {/* Filter bar */}
-      <div className="border-b border-brand-black/10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div
-            role="group"
-            aria-label="Filter by category"
-            className="flex flex-wrap gap-2 md:gap-3"
-          >
-            <button
-              type="button"
-              onClick={() => update({ cat: null })}
-              aria-pressed={activeCategory === "all" && !unknownSlug}
-              className={`min-h-11 text-xs md:text-sm tracking-[0.08em] uppercase px-4 py-2 border transition-colors duration-300 ${
-                activeCategory === "all"
-                  ? "bg-brand-black text-brand-white border-brand-black"
-                  : "border-brand-black/20 text-ink hover:border-brand-black"
-              }`}
-            >
-              All ({products.length})
-            </button>
-            {categories.map((category) => {
-              const count = products.filter(
-                (p) => p.category === category.name
-              ).length;
-              return (
-                <button
-                  key={category.slug}
-                  type="button"
-                  onClick={() => update({ cat: category.slug })}
-                  aria-pressed={activeCategory === category.name}
-                  className={`min-h-11 text-xs md:text-sm tracking-[0.08em] uppercase px-4 py-2 border transition-colors duration-300 ${
-                    activeCategory === category.name
-                      ? "bg-brand-black text-brand-white border-brand-black"
-                      : "border-brand-black/20 text-ink hover:border-brand-black"
-                  }`}
-                >
-                  {category.name} ({count})
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Price band + sort */}
-          <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-3">
-            <div
-              role="group"
-              aria-label="Filter by price"
-              className="flex flex-wrap items-center gap-2"
-            >
-              <span className="text-[10px] tracking-[0.18em] uppercase text-ink/45 mr-1">
-                Price
-              </span>
-              <button
-                type="button"
-                onClick={() => update({ price: null })}
-                aria-pressed={!band}
-                className={`min-h-11 px-3 py-1.5 text-xs font-light border transition-colors duration-300 ${
-                  !band
-                    ? "border-brand-black text-ink"
-                    : "border-brand-black/15 text-ink/60 hover:border-brand-black/50"
-                }`}
-              >
-                Any
-              </button>
-              {PRICE_BANDS.map((option) => (
-                <button
-                  key={option.key}
-                  type="button"
-                  onClick={() =>
-                    update({ price: band?.key === option.key ? null : option.key })
-                  }
-                  aria-pressed={band?.key === option.key}
-                  className={`min-h-11 px-3 py-1.5 text-xs font-light border transition-colors duration-300 ${
-                    band?.key === option.key
-                      ? "border-brand-black text-ink"
-                      : "border-brand-black/15 text-ink/60 hover:border-brand-black/50"
-                  }`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-
-            <label className="flex items-center gap-2 ml-auto">
-              <span className="text-[10px] tracking-[0.18em] uppercase text-ink/45">
-                Sort
-              </span>
-              <select
-                value={sortKey}
-                onChange={(event) => update({ sort: event.target.value })}
-                className="min-h-11 border border-brand-black/20 bg-transparent px-3 py-2 text-xs font-light text-ink focus:border-brand-black"
-              >
-                {SORTS.map((option) => (
-                  <option key={option.key} value={option.key}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      {/* Grid */}
-      <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
-        <div aria-live="polite">
-          {unknownSlug && (
-            <p className="mb-5 border border-brand-black/20 bg-soft-gray px-4 py-3 text-xs font-light text-ink/70">
-              That collection is not in the catalog — showing all products
-              instead.
-            </p>
-          )}
-          <h2 className="text-xs tracking-[0.18em] uppercase text-ink/50 mb-8">
-            {heading} — showing {visible.length} of {sorted.length} items
-          </h2>
-        </div>
-
-        {sorted.length === 0 ? (
-          <div className="py-16 text-center">
-            <p className="font-serif text-2xl md:text-3xl font-light text-ink mb-4">
-              No products match those filters.
-            </p>
-            <button
-              type="button"
-              onClick={() => update({ cat: null, price: null, sort: null })}
-              className="min-h-11 border border-brand-black/30 text-xs tracking-[0.14em] uppercase px-7 py-3 hover:bg-brand-black hover:text-brand-white transition-colors duration-300"
-            >
-              Clear Filters
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-14">
-              {visible.map((product, i) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  priority={i < 8}
-                />
-              ))}
-            </div>
-
-            {visible.length < sorted.length && (
-              <div className="mt-12 text-center">
-                <button
-                  type="button"
-                  onClick={() => setLimit((current) => current + PAGE_SIZE)}
-                  className="min-h-11 inline-flex items-center border border-brand-black/30 text-xs tracking-[0.14em] uppercase px-9 py-3.5 hover:bg-brand-black hover:text-brand-white transition-colors duration-300"
-                >
-                  Load {Math.min(PAGE_SIZE, sorted.length - visible.length)} more
-                </button>
-                <p className="mt-4 text-xs font-light text-ink/50">
-                  {visible.length} of {sorted.length} products loaded
-                </p>
-              </div>
-            )}
-          </>
-        )}
-
-        {/* OEM note */}
-        <div className="mt-16 md:mt-24 bg-soft-gray px-8 py-12 text-center">
-          <h2 className="font-serif text-2xl md:text-3xl font-light text-ink mb-3">
-            Looking for custom products?
-          </h2>
-          <p className="text-sm font-light text-ink/65 max-w-lg mx-auto mb-7">
-            Every product on this page can be customized — logos, colors,
-            sizing, and packaging. Low MOQs with 7–12 day prototyping.
-          </p>
-          <a
-            href="mailto:contact@glintic.com?subject=OEM%20Inquiry"
-            className="inline-flex items-center min-h-11 bg-brand-black text-brand-white text-xs tracking-[0.14em] uppercase px-8 py-3.5 hover:bg-ink transition-colors duration-300"
-          >
-            Start an OEM Project
-          </a>
-        </div>
-      </div>
-    </div>
-  );
+  function change(patch: Partial<CatalogView>) { const next = { ...view, ...patch }; setView(next); window.history.replaceState(window.history.state, "", viewUrl(next, window.location.href)); }
+  const results = catalogResults(view);
+  const visible = results.slice(0, view.limit);
+  const main = visible.filter((product) => product.collection !== "more");
+  const more = visible.filter((product) => product.collection === "more");
+  const custom = madeToOrder.filter((group) => (view.cat === "all" || group.collection === view.cat) && (!view.series || view.series === group.id));
+  const groups = series.filter((group) => view.cat === "all" || group.collection === view.cat);
+  const selectedCollection = collections.find((collection) => collection.slug === view.cat);
+  return <section className="section-space pt-8!" id="catalog"><div className="studio-container">
+    <nav aria-label="Filter by collection" className="flex flex-wrap gap-2 mb-7">{[{ slug: "all", shortName: "All Collections" }, ...collections, { slug: "more", shortName: "More From GLINTIC" }].map((collection) => <button key={collection.slug} type="button" aria-pressed={view.cat === collection.slug} onClick={() => change({ cat: collection.slug, series: "", limit: PAGE_SIZE })} className={`btn border ${view.cat === collection.slug ? "bg-glintic-charcoal text-glintic-surface border-glintic-charcoal" : "bg-glintic-surface text-glintic-charcoal border-glintic-sage hover:bg-glintic-sage-light"}`}>{collection.shortName}</button>)}</nav>
+    <div className="flex flex-col sm:flex-row justify-between gap-5 border-y border-glintic-line-dark py-5 items-start sm:items-center"><p className="text-sm" role="status" aria-live="polite">{results.length} catalog items{custom.length ? ` · ${custom.length} made-to-order series` : ""}</p><div className="flex flex-wrap gap-3 w-full sm:w-auto">{groups.length > 0 && <label className="field flex-1 sm:flex-none">Series<select value={view.series} onChange={(event) => change({ series: event.target.value, limit: PAGE_SIZE })}><option value="">All series</option>{groups.map((group) => <option key={group.id} value={group.id}>{group.id} · {group.name}</option>)}</select></label>}<label className="field flex-1 sm:flex-none">Sort by<select value={view.sort} onChange={(event) => change({ sort: event.target.value, limit: PAGE_SIZE })}>{sortOptions.map((sort) => <option value={sort.value} key={sort.value}>{sort.label}</option>)}</select></label></div></div>
+    {selectedCollection && <div className="py-8"><h2 className="card-title">{selectedCollection.name}</h2><p className="text-glintic-muted mt-2">{selectedCollection.tagline}</p></div>}
+    {main.length > 0 && <div className="product-grid mt-8">{main.map((product, index) => <ProductCard key={product.id} product={product} priority={index < 4} />)}</div>}
+    {more.length > 0 && <div className="mt-12"><h2 className="section-title mb-3">More From GLINTIC</h2><p className="text-glintic-muted mb-7">Additional sports supports, apparel and training tools retained from our wider catalog.</p><div className="product-grid">{more.map((product) => <ProductCard key={product.id} product={product} />)}</div></div>}
+    {visible.length < results.length && <div className="text-center mt-10"><button type="button" className="btn btn-secondary" onClick={() => change({ limit: view.limit + PAGE_SIZE })}>Load {Math.min(PAGE_SIZE, results.length - visible.length)} more</button><p className="text-xs text-glintic-muted mt-4">{visible.length} of {results.length} catalog items shown</p></div>}
+    {custom.length > 0 && <div className="mt-14"><p className="overline text-glintic-sage-dark mb-3">A conversation, not a stock promise</p><h2 className="section-title">Made-to-Order Inquiries</h2><p className="text-glintic-muted mt-4 mb-8 max-w-3xl">These series do not have a pictured SKU in the current catalog. Ask about feasibility, materials and sampling. No unverified product imagery is used.</p><div className="product-grid">{custom.map((group) => <MadeToOrderCard key={group.id} group={group} />)}</div></div>}
+    {!results.length && !custom.length && <div className="text-center py-14"><h2 className="card-title">No items in this selection.</h2><button type="button" className="btn btn-secondary mt-5" onClick={() => change(initialView)}>Reset filters</button></div>}
+    <div className="mt-14 p-7 sm:p-10 bg-glintic-linen rounded-xl text-center"><h2 className="section-title">A collection with your signature.</h2><p className="text-glintic-slate max-w-2xl mx-auto mt-4 mb-7">Bring your quantities, color palette and packaging brief. We’ll confirm the available options and build a written proposal around your project.</p><RfqTrigger type="OEM Project">Start an OEM Project ↗</RfqTrigger></div>
+  </div></section>;
 }

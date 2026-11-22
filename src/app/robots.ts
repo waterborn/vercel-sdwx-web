@@ -4,7 +4,7 @@ import { siteUrl } from "@/data/site";
 /* ── robots.txt — the catalog site is fully crawlable ── */
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [{ userAgent: "*", allow: "/" }],
+    rules: [{ userAgent: "*", allow: "/", disallow: "/api/" }],
     sitemap: `${siteUrl}/sitemap.xml`,
   };
 }

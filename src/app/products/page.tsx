@@ -1,48 +1,10 @@
 import type { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
 import ShopGrid from "@/components/ShopGrid";
-import { products } from "@/data/products";
+import ContactCTA from "@/components/ContactCTA";
 import { breadcrumbSchema, pageOpenGraph } from "@/data/site";
-
-export const metadata: Metadata = {
-  title: "Shop All Products",
-  description:
-    "Browse the full GLINTIC catalog — recovery & wellness gear, sports support & braces, yoga & pilates accessories, wear, and aesthetic fitness equipment.",
-  alternates: { canonical: "/products" },
-  openGraph: pageOpenGraph(
-    "Shop All Products — GLINTIC Catalog",
-    "66 catalog items across six product lines: recovery gear, support braces, yoga props, studio wear and fitness equipment. Low MOQ, OEM ready.",
-    "/products"
-  ),
-};
-
+const description = "Explore five curated GLINTIC collections for yoga and Pilates studios, restorative practice, studio textiles and private-label retail. Inquire by series or SKU.";
+export const metadata: Metadata = { title: "Studio Collections", description, alternates: { canonical: "/products" }, openGraph: pageOpenGraph("Studio Collections | GLINTIC", description, "/products") };
 export default function ProductsPage() {
-  return (
-    <main>
-      <JsonLd
-        data={breadcrumbSchema([
-          { name: "Home", path: "/" },
-          { name: "Products", path: "/products" },
-        ])}
-      />
-
-      {/* Page header */}
-      <section className="bg-soft-gray py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-ink/50 mb-4">
-            {products.length} Products · Low MOQ · OEM Ready
-          </p>
-          <h1 className="font-serif text-4xl md:text-6xl font-light tracking-[0.04em] text-ink">
-            Shop All
-          </h1>
-          <p className="mt-5 text-sm md:text-base font-light leading-relaxed text-ink/65 max-w-xl mx-auto">
-            The complete GLINTIC Sports Support &amp; Yoga Ecosystem —
-            engineered in Shanghai for brands, studios, and retailers worldwide.
-          </p>
-        </div>
-      </section>
-
-      <ShopGrid />
-    </main>
-  );
+  return <main id="main-content"><JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Collections", path: "/products" }])} /><section className="section-space bg-glintic-linen"><div className="studio-container"><p className="overline text-glintic-sage-dark mb-5">The GLINTIC Studio Catalog</p><h1 className="display-title">Considered essentials.<br />Endless possibilities.</h1><p className="lead text-glintic-slate max-w-2xl mt-6">From the first stretch to the quiet moments in between. Explore our five collections and build a shortlist for your studio or brand.</p><p className="text-xs text-glintic-slate mt-5">Catalog references, not live inventory. Materials, specifications, MOQ and availability require confirmation.</p></div></section><ShopGrid /><ContactCTA /></main>;
 }

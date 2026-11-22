@@ -1,70 +1,73 @@
 # GLINTIC 官网自测 · 未解决问题清单
 
-> 本文档只跟踪**尚未解决**的问题。第 1 批（性能与死链）、第 2 批（SEO 与内容闭环）、第 3 批（可访问性与列表体验）已实施并复测通过，其修复记录、逐项证据、验收口径对照、改动清单与第 1 轮基线快照均已从本文档删除。
-> 订阅表单按需求本轮**不做**。
+> 执行依据：`GLINTIC_Studio_独立站建站需求说明书_v3.1_审核版.md`，D1–D4。
+> 本报告跟踪当前英文开发版的未闭环项目；不代表正式上线批准。原报告的订阅表单、阿里外链及旧字体遗留项已不适用于本版。
 
-- **测试日期**：2026-11-10
-- **被测版本**：分支 `manduka`，基线提交 `43b75de` + 267 项工作区改动（尚未提交）
-- **测试范围**：`/`、`/products`、`/about`、`/legal`、自定义 404 + 共享布局（AnnouncementBar / Navbar / Footer）
-- **运行环境**：`next build` 产物 + `next start`（http://localhost:3000，Next.js 16.2.7 Turbopack）；桌面 1440×900、移动 390×844（`isMobile + hasTouch`）
-- **取证方式**：puppeteer-core 驱动本机 Edge（`headless: "new"`）：冷缓存上下文逐页测传输量与 LCP、a11y/键盘回归、交互回归、Node `fetch` 全量内部链接与 hash 目标校验、CDP `Emulation.setScriptExecutionDisabled` 测无 JS 可见性
-- **原始数据**：`.verify/r2-audit.json`、`.verify/r2-a11y.json`、`.verify/r2-func.json`、`.verify/brand.json` 及 `audit-r2.mjs` / `audit-r2b.mjs` / `audit-r2c.mjs` / `probe-rail.mjs` / `probe-payload.mjs` / `probe-brand.mjs` / `shot-brand.mjs`（`.verify/` 已在 `.gitignore` 与 `eslint` ignore 中）
+## 当前验证范围与证据
 
----
+- 日期：2026-11-22；本次工作区改动尚未提交。
+- 环境：Next.js 16.2.7 生产构建 + `next start`，`http://localhost:3100`。
+- 页面：`/`、`/products`、`/about`、`/legal`、404；服务端 `/api/rfq`。
+- 浏览器：本机 Edge `158.0.4370.33`，现有 `puppeteer-core` 驱动的独立无头实例。IDE 浏览器连接曾超时，后续结果以独立实例记录为准；未新增项目依赖。
+- 视口：390 / 640 / 1024 / 1280 / 1440 × 900，五页共 25 组；移动抽屉另测 390 × 844。
+- 数据：`.verify/v31-browser.json`、`.verify/verify-v31.mjs`；截图 `.verify/v31-home-390.png`、`v31-home-1440.png`、`v31-products-desktop.png`、`v31-rfq-error.png`、`v31-rfq-mobile.png`。
+- 静态检查：`tsc --noEmit`、生产构建通过；ESLint 0 errors / 6 warnings，均为既定预编码图片架构的 `@next/next/no-img-element`，其中一项属于未被新首页引用的历史组件。
+- 自动化：`npm test` 的 13 项目录 / URL / 校验 / Route Handler 检查通过；加生产 HTTP 冒烟为 14 项通过。服务端测试 mock Resend，不真实发送邮件。
+- 浏览器：11 组交互检查通过、25 组视口记录均无横向溢出 / 破图。已覆盖 24→48 分页、More 19 SKU、G-06、排序与 URL 恢复、RFQ 焦点与滚动锁、Esc / 遮罩 / 关闭确认、503 保留草稿、重试复用提交 ID、样品预填、移动菜单互斥、减弱动效、无 JS 告知及站内锚点。
+- 成功提示及重新申请焦点仅以本地拦截的 200 响应验证，不代表 Resend 收信成功。200% 仅测 1440→720 CSS 像素的等效重排，不代替浏览器原生缩放验收。
 
-## 一、待解决问题
+旧版 2026-11-10 的传输量、LCP 和字体体积不作为本版性能结论；历史 `.verify/r2-*` 数据仍保留。
 
-### 1. 订阅表单（P0，按需求本轮排除）
+## 一、正式邮件与联系渠道（上线阻断）
 
-仍为原生 `<form>` 提交，`requestSubmit()` 会发出 `GET /?` 并刷新页面。落地需 `onSubmit` → `POST /api/subscribe`（或接第三方 EDM）+ 成功/失败态文案；未接后端前至少改 mailto 预填。
+目前未配置 Resend 三项发信变量，合法 RFQ 明确返回 503，不清空草稿、不虚报发信成功。未发送真实询盘或买家自动回执。
 
-### 2. `rel="sponsored noopener noreferrer"`
+待业务方完成：
 
-产品卡外链目前为 `noopener noreferrer`（安全项已达标，`extUnsafeRel=0`）。阿里系商品链接是否补 `sponsored` / `ugc` 标记，待确认外链长期保留策略后一并加。
+- Resend 账户与发信域验证；设置 `RESEND_API_KEY`、`RFQ_FROM_EMAIL`、`RFQ_TO_EMAIL`。邮箱变量只填地址，不含显示名。
+- 设置正式 `NEXT_PUBLIC_CONTACT_EMAIL`，使页脚、无 JS 及失败 mailto 兜底真实可用；空配置下没有假邮箱链接。
+- 提供 `NEXT_PUBLIC_WHATSAPP_NUMBER` 国际纯数字号码；空配置下不显示挂件。尚未验证真实设备唤起与浮层避让。
+- 端到端确认管理员实际收信、字段完整、Reply-To 和服务商幂等结果；区分服务商接受与进入收件箱。
+- 确认三秒反馈指标、回复时效与是否需要自动回执；当前不提供自动回执。
 
-### 3. 需人工提供信息后才能闭环
+限流仅为单实例哈希桶防护，不承诺跨实例精确全局限流或永久保存询盘。询盘主要存于业务邮箱与 Resend 日志，网站不新增数据库。
 
-- 正式域名（决定 canonical / OG / sitemap 的绝对地址）→ 请在 Vercel 项目环境变量里设 `NEXT_PUBLIC_SITE_URL`（现兜底 `vercel-sdwx-web.vercel.app`）；
-- 社媒主页 URL → 填入 `Footer.tsx` 的 `SOCIAL_PROFILES` 即自动出现图标（现为空数组，整块不渲染）；
-- 询盘邮箱与电话/WhatsApp → 全站 `contact@glintic.com` 为占位（邮箱域名按惯例保持小写）；
-- 素材合规：商品图直取店铺素材，需逐张复核水印 / 中文残留 / 第三方标识。
+## 二、业务内容与素材真实性（上线阻断）
 
-### 4. 上线前需真人浏览器抽查产品卡外链
+- 提供运营主体、工厂经营身份与自有 / 合作关系、真实车间照片及授权。当前工坊 / 四级 QA 为待确认的项目框架，不宣称拥有未经核验的工厂或已完成所有测试。
+- 复核 47 个系列 SKU / 19 个 More SKU 草案，重点确认 G-04、G-08、G-10、G-16、G-20 材质及结构冲突。五个 Made-to-Order 系列须确认供应能力、MOQ 与交期；G-18 未获定义，不擅自创建。
+- 逐张核验店铺图片版权、水印、中文残留、第三方标识与材质对应；五款核心微距图尚未取得合规实拍证据。图库明确作为编辑氛围图，不冒充生产线。
+- 样品盒五项实物、软木刻字样块、色卡与手册、US$39 是否含运费及返还条件待确认。当前清单标明 Proposed，不替换为未经批准的实物，不将退款改为首单抵扣。
+- 取得 OEKO-TEX / GOTS / amfori BSCI / SGS 等有效证据、适用 SKU 与徽标许可；当前不展示无证据徽标，不承诺全品类认证、抗菌、环保或全球 DDP。
+- 确认最终 Slogan 与字体。开发版采用已定义英文定位、原文允许的 Plus Jakarta Sans + Cormorant Garamond，仅 400 / 500；不表示最终品牌选择已批准。
+- 确认数量梯度边界、精确数量控件及无邮编国家规则。当前精确数量可选且为 10 的倍数，无邮编采用买家声明；样品不套大货数量。
+- 运费 / DDP 自动计算未提供数据规则；当前收集目的地，由人工报价，不提供虚构运费计算器。
 
-66 个 SKU 的详情页链接以 alicdn imageHash 与本地素材精确匹配（66/66 命中、66 个唯一 productId，59/66 slug 同源交叉校验），本地证据链完整；但自动化会话点外链会被阿里风控拦到 `login.alibaba.com`，因此**上线前请用真人浏览器抽查若干条**确认落地页正确。
+## 三、域名、部署与隐私（上线阻断）
 
-### 5. 未做但可选的后续优化
+- `NEXT_PUBLIC_SITE_URL` 默认 `https://glinticstudio.com`。确认根域 / www canonical 及归一策略后，在部署环境配置并重新构建。
+- Porkbun / Vercel HTTPS、DNS、重定向与 Resend 邮箱记录尚未配置或验收；本轮未执行部署或外部 DNS 修改。
+- 设置 `NEXT_PUBLIC_LEGAL_NAME`；完善隐私政策的处理主体、法律依据、保存期限、跨境安排及正式联系渠道。
+- 不在仓库或客户端放真实密钥，只有非公开的服务端环境变量可保存 Resend key。`.env.example` 为空值模板，`.env.local` 仍被忽略。
 
-- 字体传输 67.1 KB（Cormorant 4 字重 + Nunito 5 字重）可裁到实际使用的 2–3 个字重；
-- JS 164.8 KB 以 React runtime 为主，暂无可拆重库；
-- 站内详情页（`/products/[id]` + Product schema）待脱离阿里自营时再做。
+## 四、尚未完成的性能与设备验收
 
----
+- Lighthouse 桌面 / 移动 Performance >90 尚未测量；当前环境未提供 Lighthouse 工具，不能用历史 LCP 或本地 HTTP 检查代替。
+- 尚需真实移动触控设备、浏览器原生 200% 缩放、读屏与逐区域文字对比度测试；已通过的视口和键盘检查不等于完整无障碍认证。
+- 图片上的文字、样品内容及正式 WhatsApp 配置后需复测。当前主按钮、目录筛选与选择器 44px 高度检查通过，不代替全站逐个目标的人工验收。
 
-## 二、当前基线数据（供后续优化参照）
+## 本地配置与复测
 
-### 传输与加载（生产构建，冷缓存上下文）
+使用 `.env.example` 配置本地 `.env.local` 或 Vercel 环境变量。`NEXT_PUBLIC_*` 改动需重新构建；构建前停止同目录的运行服务，避免争用 `.next`。
 
-| 页面 | HTML | 总传输 | 图片 | `<img>` | LCP |
-|---|---|---|---|---|---|
-| `/` | 15.7 KB | **451.4 KB** | 56.1 KB(+40.9 KB 背景) | 34 | 456 ms |
-| `/products` | 10.7 KB | 399.8 KB | 27.4 KB | 24 | 264 ms |
-| `/about` | 16.3 KB | 476.6 KB | 100.5 KB | 7 | 280 ms |
-| `/legal` | 9.0 KB | 369.0 KB | 0 | 0 | 212 ms |
-| 404 | 6.1 KB | 325.2 KB | 0 | 0 | 96 ms |
-
-首页构成拆解（`encodedBodySize`）：JS 164.8 KB（9 文件）、字体 67.1 KB（2 woff2 子集）、图片 56.1 KB、CSS 背景图 40.9 KB、CSS 7.8 KB、favicon 25.3 KB。LCP 在本机多次实测 316–456 ms，属测量抖动区间。
-
-站点图片磁盘负载 2.16 MB（WebP 阶梯，`public/` 全目录 2.23 MB）；移动端触控目标 `<44px` 首页 9 个 / 其余 1 个，`<24px` 为 0。
-
-### 构建与静态检查
-
+```sh
+npm test
+npx tsc --noEmit
+npm run lint
+npm run build
+npm run start -- --port 3100
 ```
-next build   ✓ Compiled successfully / TypeScript 通过 / 9 static pages
-             ○ /  ○ /_not-found  ○ /about  ○ /legal  ○ /products  ○ /robots.txt  ○ /sitemap.xml
-tsc --noEmit  0 errors
-eslint        0 errors / 9 warnings —— 全部为 @next/next/no-img-element
-链接完整性     dead=0 hashMiss=0 placeholder=0 extUnsafeRel=0
-```
 
-> **9 条 lint warning 为有意豁免**：图片走「sharp 预编码 + manifest + 原生 `<img>`」路线，`next/image` 的自动优化在此架构下是重复劳动；已把 `.verify/**` 加入 `eslint` ignore，让告警面只反映站点代码。
+服务运行后另一个终端执行 `node scripts/test-site.mjs --http=http://localhost:3100`，检查实际页面与资源。`.verify/verify-v31.mjs` 为现有 Edge 环境下的本地浏览器检查脚本，默认测试未配置发信的 503 场景；配置正式邮件后不得直接运行真实提交部分，应先改为全程拦截本地请求。
+
+一期没有在线支付或 Newsletter 后端；Sample Box 在确认内容、地址与运费后线下发 PayPal 账单。无需复测已移除的阿里产品跳转，但脚本侧来源采集记录仍保留。

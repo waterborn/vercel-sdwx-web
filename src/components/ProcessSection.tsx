@@ -1,88 +1,10 @@
-import Link from "next/link";
-import { asset } from "@/data/images";
-
-/* ── Insights / process section — article cards, Manduka magazine style ── */
-const ARTICLES = [
-  {
-    category: "OEM & ODM",
-    title: "From Concept to Sample in 7–12 Days",
-    excerpt:
-      "Design files in AI, PDF, or PSD. Our in-house customization team handles everything from logo placement to full bespoke product development.",
-    image: "/images/process-sample.jpg",
-    href: "/about#oem",
-  },
-  {
-    category: "Quality Assurance",
-    title: "100% Inspection Before Every Shipment",
-    excerpt:
-      "Stitching, compression consistency, and structural durability — every unit is checked, in an ISO 14001 certified facility with SGS-tested materials.",
-    image: "/images/process-quality.jpg",
-    href: "/about#quality",
-  },
-  {
-    category: "Materials",
-    title: "Cork, Neoprene & Second-Skin Knit",
-    excerpt:
-      "Sweat-activated grip cork surfaces, anatomically contoured neoprene supports, and Nylon 66 grip socks — materials chosen for performance, not price.",
-    image: "/images/process-materials.jpg",
-    href: "/products",
-  },
+import { RfqTrigger } from "@/components/RfqProvider";
+const steps = [
+  { title: "Select & Sample", text: "Build your shortlist and request a Sample Box. Confirm the materials and specifications before taking the next step." },
+  { title: "Brand Customization", text: "Share your logo, Pantone references and packaging brief. The right branding process is agreed for each product." },
+  { title: "Studio-Grade QA", text: "Define incoming, in-process, finished-product and outgoing checks around your approved sample and requirements." },
+  { title: "Delivery Planning", text: "Share your studio or warehouse destination. DDP and other shipping options are confirmed per route, not assumed worldwide." },
 ];
-
 export default function ProcessSection() {
-  return (
-    <section className="py-16 md:py-24 bg-soft-gray">
-      <div className="max-w-7xl mx-auto px-6 text-center mb-10 md:mb-16">
-        <p className="text-[11px] tracking-[0.28em] uppercase text-ink/50 mb-3">
-          The GLINTIC Method
-        </p>
-        <h2 className="font-serif text-3xl md:text-5xl font-light tracking-[0.04em] text-ink">
-          Built on Process
-        </h2>
-      </div>
-
-      {/* Full-row cards: inset 32px from both edges */}
-      <div className="grid md:grid-cols-3 gap-x-1 md:gap-x-2 gap-y-8 px-8">
-        {ARTICLES.map((article) => {
-          const image = asset(article.image);
-          return (
-          <article key={article.title} className="group bg-brand-white">
-            <Link href={article.href} className="block aspect-[4/3] overflow-hidden">
-              <img
-                src={image.src}
-                srcSet={image.srcSet}
-                sizes="(min-width: 768px) 33vw, 92vw"
-                width={image.width}
-                height={image.height}
-                alt={article.title}
-                loading="lazy"
-                decoding="async"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-            </Link>
-            <div className="p-6 md:p-7">
-              <p className="text-[11px] font-semibold tracking-[0.22em] uppercase text-ink/55 mb-3">
-                {article.category}
-              </p>
-              <h3 className="font-serif text-xl md:text-2xl font-light leading-snug text-ink mb-3">
-                <Link href={article.href} className="hover:opacity-70 transition-opacity">
-                  {article.title}
-                </Link>
-              </h3>
-              <p className="text-sm font-light leading-relaxed text-ink/65 mb-5">
-                {article.excerpt}
-              </p>
-              <Link
-                href={article.href}
-                className="link-underline text-xs tracking-[0.12em] uppercase text-ink"
-              >
-                Read More
-              </Link>
-            </div>
-          </article>
-          );
-        })}
-      </div>
-    </section>
-  );
+  return <section id="oem" className="section-space bg-glintic-linen"><div className="studio-container"><div className="flex flex-col sm:flex-row justify-between gap-6 sm:items-end"><div><p className="overline text-glintic-sage-dark mb-4">OEM / ODM · Made around you</p><h2 className="section-title">From your vision to your studio.</h2></div><RfqTrigger type="OEM Project" className="btn btn-secondary">Start an OEM Project ↗</RfqTrigger></div><div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">{steps.map((step, index) => <article key={step.title} className="relative border-t border-dashed border-glintic-sage pt-6"><span className="step-number">0{index + 1}</span><h3 className="card-title mt-5 mb-4">{step.title}</h3><p className="text-glintic-slate text-sm">{step.text}</p></article>)}</div></div></section>;
 }
