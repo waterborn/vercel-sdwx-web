@@ -6,7 +6,7 @@
 ## 当前验证范围与证据
 
 - 日期：2026-11-22；本次工作区改动尚未提交。
-- 环境：Next.js 16.2.7 生产构建 + `next start`，`http://localhost:3100`。
+- 环境：Next.js 16.4.6 生产构建 + `next start`，`http://localhost:3100`。
 - 页面：`/`、`/products`、`/about`、`/legal`、404；服务端 `/api/rfq`。
 - 浏览器：本机 Edge `158.0.4370.33`，现有 `puppeteer-core` 驱动的独立无头实例。IDE 浏览器连接曾超时，后续结果以独立实例记录为准；未新增项目依赖。
 - 视口：390 / 640 / 1024 / 1280 / 1440 × 900，五页共 25 组；移动抽屉另测 390 × 844。
@@ -17,6 +17,15 @@
 - 成功提示及重新申请焦点仅以本地拦截的 200 响应验证，不代表 Resend 收信成功。200% 仅测 1440→720 CSS 像素的等效重排，不代替浏览器原生缩放验收。
 
 旧版 2026-11-10 的传输量、LCP 和字体体积不作为本版性能结论；历史 `.verify/r2-*` 数据仍保留。
+
+## 依赖与 Node 版本（2026-11-23 更新）
+
+Vercel 构建日志提示 `engines` 使用开放区间会在 Node 新大版本发布后自动升级，且 `npm audit` 在生产依赖中报告 1 个 critical（Next 自身）。经确认后执行：
+
+- `next` 由 `16.2.7` 升到 `16.4.6`，`eslint-config-next` 同步到 `16.4.6`；`npm audit fix` 在 semver 范围内解决余下传递依赖后，`npm audit` 与 `npm audit --omit=dev` 均为 0 漏洞。
+- `engines.node` 由 `>=20.9.0` 改为 `22.x`，`.nvmrc` 同步为 `22`。Vercel 侧同时设置了 Node.js Version 覆盖，二者需保持一致；本机 Node 25 与声明版本不同，`npm install` 可能打印 EBADENGINE 提示，属预期。
+- 该升级替换了 v3.1 文档表中「Next.js 16.2.7」的版本锁定，属同主版本安全修复，未更换框架；App Router、静态页面与 Route Handler 结构不变，构建仍为 8 条路由（7 static + 1 dynamic）。
+- 升级后复验：`tsc --noEmit` 0 错误、ESLint 0 errors / 6 warnings、`npm test` 13 项通过、生产 HTTP 冒烟 14 项通过、浏览器 11 组交互与 25 组视口全部通过。
 
 ## 一、正式邮件与联系渠道（上线阻断）
 
