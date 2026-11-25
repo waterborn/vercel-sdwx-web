@@ -614,5 +614,13 @@
     "height": 427,
     "bytesBefore": 109620,
     "bytesAfter": 42520
+  },
+  "/images/sample-box-unboxing.png": {
+    "src": "/images/sample-box-unboxing-1280w.webp",
+    "width": 1280,
+    "height": 720,
+    "srcSet": "/images/sample-box-unboxing-640w.webp 640w, /images/sample-box-unboxing-960w.webp 960w, /images/sample-box-unboxing-1280w.webp 1280w",
+    "bytesBefore": 3062352,
+    "bytesAfter": 60108
   }
 }

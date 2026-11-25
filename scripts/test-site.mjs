@@ -17,6 +17,8 @@ const rfqUrl = await moduleUrl("../src/data/rfq.ts");
 const viewUrl = await moduleUrl("../src/data/catalog-view.ts", { "./products": productsUrl });
 const validationUrl = await moduleUrl("../src/lib/rfq-validation.ts", { "../data/rfq": rfqUrl });
 const routeUrl = await moduleUrl("../src/app/api/rfq/route.ts", { "@/data/products": productsUrl, "@/lib/rfq-validation": validationUrl });
+const navigationUrl = await moduleUrl("../src/data/navigation.ts", { "./products": productsUrl });
+const { megaColumns } = await import(navigationUrl);
 const catalog = await import(productsUrl);
 const view = await import(viewUrl);
 const { emptyDraft } = await import(rfqUrl);
@@ -43,7 +45,7 @@ await test("目录保留 66 SKU、47 / 19 映射，无重复或虚构 G-18", () 
   }
 });
 await test("目录图与首屏响应式资产全部存在", async () => {
-  const paths = [...catalog.products.map((product) => product.image), "/images/hero.png", "/images/contact-cta.jpg"];
+  const paths = [...catalog.products.map((product) => product.image), "/images/hero.png", "/images/contact-cta.jpg", "/images/sample-box-unboxing.png"];
   for (const path of paths) {
     const entry = manifest[path];
     assert.ok(entry?.width > 0 && entry?.height > 0);
@@ -53,7 +55,7 @@ await test("目录图与首屏响应式资产全部存在", async () => {
 });
 await test("URL 非法参数归一、价格退出、分页与排序可重建", () => {
   assert.deepEqual(view.parseView("?cat=bad&sort=price-low&limit=-1&series=G-18"), view.initialView);
-  const state = view.parseView("?cat=restorative-meditation&sort=name-desc&limit=48&series=G-11&price=under-5");
+  const state = view.parseView("?cat=restorative&sort=name-desc&limit=48&series=G-11&price=under-5");
   const url = view.viewUrl(state, "https://glinticstudio.com/products?price=under-5&campaign=test");
   assert.equal(url.includes("price="), false);
   assert.ok(url.includes("campaign=test"));
@@ -61,6 +63,59 @@ await test("URL 非法参数归一、价格退出、分页与排序可重建", (
   assert.equal(view.catalogResults(view.initialView).slice(0,24).length,24);
   assert.equal(view.catalogResults({ ...view.initialView, cat: "more" }).length,19);
   assert.equal(view.catalogResults({ ...view.initialView, series: "G-06" }).length,0);
+});
+await test("Task1 五集合归属、47/19 与 19 条导航系列保持一致", () => {
+  assert.deepEqual(catalog.collections.map((c) => c.slug), ["yoga-essentials", "pilates-sculpt", "restorative", "fascia-recovery", "studio-retail"]);
+  assert.deepEqual(catalog.collections.map((c) => view.catalogResults({ ...view.initialView, cat: c.slug }).length), [4, 12, 4, 10, 17]);
+  assert.equal(catalog.seriesById["G-10"].collection, "yoga-essentials");
+  assert.equal(catalog.seriesById["G-04"].collection, "pilates-sculpt");
+  assert.equal(catalog.seriesById["G-03"].collection, "fascia-recovery");
+  assert.equal(catalog.seriesById["G-08"].collection, "fascia-recovery");
+  const items = megaColumns.flatMap((column) => column.items);
+  assert.equal(items.length, 19);
+  assert.equal(new Set(items.map((item) => item.id)).size, 19);
+  for (const item of items) {
+    const state = view.parseView(new URL(item.href, "https://glinticstudio.com").search);
+    assert.equal(state.series, item.id);
+    assert.equal(state.cat, item.collection);
+    assert.equal(view.catalogResults(state).length, item.skuIds.length);
+  }
+});
+await test("五条旧集合链接归一，迁出系列仍保留筛选与附加参数", () => {
+  for (const [old, next] of Object.entries(view.legacyCategories)) {
+    const state = view.parseView(`?cat=${old}&sort=name-desc&limit=48`);
+    assert.equal(state.cat, next);
+    assert.equal(state.limit, 48);
+    assert.equal(state.sort, "name-desc");
+  }
+  for (const [old, id] of [["yoga-pilates-essentials", "G-03"], ["yoga-pilates-essentials", "G-04"], ["pilates-props-resistance", "G-08"], ["restorative-meditation", "G-10"]]) {
+    const state = view.parseView(`?cat=${old}&series=${id}&sort=name-desc&limit=48`);
+    assert.equal(state.cat, catalog.seriesById[id].collection);
+    assert.equal(state.series, id);
+    const url = view.viewUrl(state, "https://glinticstudio.com/products?campaign=test");
+    assert.ok(url.includes("campaign=test"));
+    assert.deepEqual(view.parseView(new URL(url, "https://glinticstudio.com").search), state);
+  }
+  assert.equal(view.parseView("?cat=__proto__").cat, "all");
+  assert.equal(view.parseView("?cat=restorative&series=G-10").series, "");
+});
+const quick = () => ({ source: "quick", inquiryType: "Bulk Quote", contactName: "Ada Buyer", email: "ada@gmail.com", notes: "G-01 100 pcs, deliver to California 90210", submissionId: valid().submissionId });
+await test("快速询盘只需四字段，详细 RFQ 仍要求公司、目的地与数量", () => {
+  const result = validateRfq(quick(), targets, { quick: true });
+  assert.equal(result.ok, true);
+  assert.equal(result.data.companyName, "");
+  assert.equal(result.data.country, "");
+  assert.equal(result.data.noPostalCode, true);
+  assert.equal(result.data.quantityRange, "");
+  assert.equal(validateRfq(quick(), targets).ok, false);
+  const sample = validateRfq({ ...quick(), inquiryType: "Sample Box" }, targets, { quick: true });
+  assert.equal(sample.ok, true);
+  assert.deepEqual(sample.data.targets, ["sample-box"]);
+});
+await test("快速询盘拒绝缺项、恶意字段、未知来源及超长内容", () => {
+  for (const patch of [{ contactName: " " }, { email: "bad" }, { notes: " " }, { notes: "x".repeat(2001) }, { source: "unknown" }, { source: true }, { email: "a@x.com\r\nBcc:b@x.com" }, { companyName: 1 }, { noPostalCode: "true" }, { targets: ["G-18"] }, { customization: ["invalid"] }, { submissionId: "bad" }]) {
+    assert.equal(validateRfq({ ...quick(), ...patch }, targets, { quick: true }).ok, false, JSON.stringify(patch));
+  }
 });
 await test("合法 RFQ 接受个人邮箱、去空格、保留空白款与包装组合", () => {
   const result = validateRfq({ ...valid(), contactName: " Ada Buyer ", customization: ["No Logo (Blank)", "Custom Packaging"] }, targets);
@@ -131,6 +186,38 @@ try {
     globalThis.fetch = async () => Response.json({}, { status: 409 });
     assert.equal((await POST(request())).status,409);
   });
+  await test("快速 API 校验、成功、幂等与空字段邮件模板（模拟）", async () => {
+    calls = [];
+    globalThis.fetch = async (url, init) => { calls.push({ url, init }); return Response.json({ id: "mock-email-id" }); };
+    assert.equal((await POST(request({ ...quick(), source: "unknown" }))).status, 400);
+    assert.equal((await POST(request({ ...quick(), notes: " " }))).status, 400);
+    assert.equal((await POST(request({ ...quick(), source: undefined }))).status, 400);
+    assert.equal((await POST(request({ ...quick(), website: "bot" }))).status, 400);
+    assert.equal(calls.length, 0);
+    assert.equal((await POST(request(quick()))).status, 200);
+    assert.equal((await POST(request(quick()))).status, 200);
+    assert.equal(calls.length, 2);
+    const mail = JSON.parse(calls[0].init.body);
+    assert.match(mail.subject, /Quick Inquiry/);
+    assert.equal(mail.text.includes("Quantity range:"), false);
+    assert.equal(mail.text.includes("Exact quantity:"), false);
+    assert.equal(mail.text.includes("Customization:"), false);
+    assert.equal(mail.text.includes("Company / Studio:"), false);
+    assert.equal(mail.text.includes("Country:"), false);
+    assert.equal(mail.text.includes("Postal code:"), false);
+    assert.match(mail.text, /G-01 100 pcs/);
+    assert.equal(calls[0].init.headers["Idempotency-Key"], calls[1].init.headers["Idempotency-Key"]);
+    assert.deepEqual(mail.to, ["team@example.invalid"]);
+    assert.equal((await POST(request({ ...quick(), companyName: "Studio Test", country: "United States", postalCode: "10001", noPostalCode: false, quantityRange: "50–200", exactQuantity: "100", customization: ["Custom Packaging"] }))).status, 200);
+    const extendedMail = JSON.parse(calls.at(-1).init.body);
+    for (const line of ["Company / Studio: Studio Test", "Country: United States", "Postal code: 10001", "Quantity range: 50–200", "Exact quantity: 100", "Customization: Custom Packaging"]) assert.ok(extendedMail.text.includes(line));
+    assert.equal((await POST(request({ ...quick(), inquiryType: "Sample Box" }))).status, 200);
+    assert.match(JSON.parse(calls.at(-1).init.body).text, /Sample Box — not a bulk order/);
+    const key = process.env.RESEND_API_KEY;
+    delete process.env.RESEND_API_KEY;
+    try { assert.equal((await POST(request(quick()))).status, 503); }
+    finally { process.env.RESEND_API_KEY = key; }
+  });
   await test("单实例连续请求达到合理限制", async () => {
     globalThis.fetch = async () => Response.json({ id: "mock-email-id" });
     for (let index = 0; index < 6; index++) assert.equal((await POST(request(valid(), { "x-vercel-forwarded-for": "rate-test" }))).status,200);
@@ -158,7 +245,7 @@ if (httpArgument) {
       assert.equal(/priceMin|priceMax|detailUrl/.test(html),false);
       if (path === "/products") assert.equal((html.match(/class="product-card group"/g) ?? []).length,24);
       if (path === "/") {
-        const ids = ["collections", "oem", "sample-box", "quality", "story", "contact"].map((id) => html.indexOf(`id="${id}"`));
+        const ids = ["collections", "oem", "sample-box", "quality", "contact"].map((id) => html.indexOf(`id="${id}"`));
         assert.ok(ids.every((index) => index > 0));
         assert.deepEqual([...ids].sort((a,b) => a-b),ids);
       }

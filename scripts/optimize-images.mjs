@@ -38,6 +38,7 @@ const TARGETS = [
  */
 const OVERRIDES = {
   "banner.jpg": { quality: 60, widths: [480, 768, 1120] },
+  "sample-box-unboxing.png": { quality: 78, widths: [640, 960, 1280] },
 };
 
 const mb = (bytes) => (bytes / 1024 / 1024).toFixed(2);
@@ -112,6 +113,15 @@ async function processSource({ file, abs, live }, dir, rawSub, widths, quality) 
 }
 
 async function main() {
+  // 可选导入已生成的样品盒渲染图，统一裁成 16:9 后进入现有资产链。
+  const sampleRender = process.argv.find((arg) => arg.startsWith("--sample-render="));
+  if (sampleRender) {
+    mkdirSync("public/images", { recursive: true });
+    await sharp(sampleRender.slice("--sample-render=".length))
+      .resize({ width: 1792, height: 1008, fit: "cover" })
+      .png()
+      .toFile(path.join("public", "images", "sample-box-unboxing.png"));
+  }
   mkdirSync(RAW_DIR, { recursive: true });
   const manifest = {};
   let before = 0;

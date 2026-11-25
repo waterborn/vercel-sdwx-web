@@ -1,14 +1,24 @@
 import { collections, products, series } from "./products";
 export const PAGE_SIZE = 24;
+export const legacyCategories: Readonly<Record<string, string>> = {
+  "yoga-pilates-essentials": "yoga-essentials",
+  "pilates-props-resistance": "pilates-sculpt",
+  "restorative-meditation": "restorative",
+  "studio-hygiene-textiles": "studio-retail",
+  "retail-merchandise": "studio-retail",
+};
 export const sortOptions = [{ value: "curated", label: "Collection order" }, { value: "name-asc", label: "Name: A–Z" }, { value: "name-desc", label: "Name: Z–A" }] as const;
 export type CatalogView = { cat: string; sort: string; limit: number; series: string; };
 export const initialView: CatalogView = { cat: "all", sort: "curated", limit: PAGE_SIZE, series: "" };
 export function parseView(search: string): CatalogView {
   const params = new URLSearchParams(search);
-  const cat = params.get("cat") ?? "all";
+  const requestedCat = params.get("cat") ?? "all";
+  const legacy = Object.hasOwn(legacyCategories, requestedCat);
+  const cat = legacy ? legacyCategories[requestedCat] : requestedCat;
   const sort = params.get("sort") ?? "curated";
   const group = series.find((entry) => entry.id === params.get("series"));
-  const validCat = cat === "all" || cat === "more" || collections.some((entry) => entry.slug === cat) ? cat : "all";
+  // 旧集合中的系列可能已迁出；有合法系列时保留用户原本的选择。
+  const validCat = legacy && group ? group.collection : cat === "all" || cat === "more" || collections.some((entry) => entry.slug === cat) ? cat : "all";
   const requestedLimit = Number(params.get("limit") ?? PAGE_SIZE);
   return { cat: validCat, sort: sortOptions.some((entry) => entry.value === sort) ? sort : "curated", limit: Number.isSafeInteger(requestedLimit) && requestedLimit >= PAGE_SIZE ? Math.min(Math.ceil(requestedLimit / PAGE_SIZE) * PAGE_SIZE, 72) : PAGE_SIZE, series: group && (validCat === "all" || validCat === group.collection) ? group.id : "" };
 }

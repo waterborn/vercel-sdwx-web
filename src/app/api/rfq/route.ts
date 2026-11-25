@@ -35,7 +35,8 @@ export async function POST(request: Request) {
   let input: unknown;
   try { input = await readBoundedJson(request); }
   catch (error) { return reply(error instanceof RangeError ? 413 : 400, { error: error instanceof RangeError ? "The request exceeds the size limit." : "The request contains invalid JSON." }); }
-  const validated = validateRfq(input, allowedTargets);
+  const quick = !!input && typeof input === "object" && !Array.isArray(input) && (input as Record<string, unknown>).source === "quick";
+  const validated = validateRfq(input, allowedTargets, { quick });
   if (!validated.ok) return reply(400, { error: validated.error });
   const data = validated.data;
   // 蜜罐命中显式拒绝，不给未发信请求伪造成功响应。
@@ -52,22 +53,23 @@ export async function POST(request: Request) {
     return `${group.id}: ${group.name}${group.skuIds.length ? "" : " | Made-to-Order inquiry; feasibility to confirm"}`;
   });
   const text = [
-    `GLINTIC Studio — ${data.inquiryType}`,
+    `GLINTIC Studio — ${quick ? "Quick Inquiry — " : ""}${data.inquiryType}`,
+    `Source: ${quick ? "Quick Inquiry" : "Detailed RFQ"}`,
     `Submission ID: ${data.submissionId}`,
     `Contact: ${data.contactName}`,
     `Business email: ${data.email}`,
-    `Company / Studio: ${data.companyName}`,
-    `Country: ${data.country}`,
-    `Postal code: ${data.noPostalCode ? "Not applicable (buyer declaration)" : data.postalCode}`,
+    ...(!quick || data.companyName ? [`Company / Studio: ${data.companyName}`] : []),
+    ...(!quick || data.country ? [`Country: ${data.country}`] : []),
+    ...(!quick || data.postalCode ? [`Postal code: ${data.noPostalCode ? "Not applicable (buyer declaration)" : data.postalCode}`] : []),
     "", "Target products:", ...(targetLines.length ? targetLines : ["General studio sourcing inquiry"]),
-    "", `Quantity range: ${data.quantityRange || "Sample Box — not a bulk order"}`,
-    `Exact quantity: ${data.exactQuantity || "Not specified"}`,
-    `Customization: ${data.customization.join(", ") || "Not specified"}`,
+    ...(!quick || data.quantityRange || data.inquiryType === "Sample Box" ? ["", `Quantity range: ${data.quantityRange || (data.inquiryType === "Sample Box" ? "Sample Box — not a bulk order" : "Not specified — see project notes")}`] : []),
+    ...(!quick || data.exactQuantity ? [`Exact quantity: ${data.exactQuantity || "Not specified"}`] : []),
+    ...(!quick || data.customization.length ? [`Customization: ${data.customization.join(", ") || "Not specified"}`] : []),
     "", "Project notes:", data.notes || "None provided.",
     "", "This inquiry is not an order or stock confirmation. Verify specifications, MOQ, supply, freight and commercial terms before quoting.",
   ].join("\n");
   try {
-    const response = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json", "Idempotency-Key": `glintic-rfq/${data.submissionId}` }, body: JSON.stringify({ from, to: [to], reply_to: data.email, subject: `GLINTIC Studio | ${data.inquiryType}`, text }), signal: AbortSignal.timeout(12000), cache: "no-store" });
+    const response = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json", "Idempotency-Key": `glintic-rfq/${data.submissionId}` }, body: JSON.stringify({ from, to: [to], reply_to: data.email, subject: `GLINTIC Studio | ${quick ? "Quick Inquiry — " : ""}${data.inquiryType}`, text }), signal: AbortSignal.timeout(12000), cache: "no-store" });
     if (!response.ok) return reply(response.status === 409 ? 409 : 502, { error: response.status === 409 ? "This submission ID was already used with different details. Edit the form and submit a new request." : "The email provider could not accept the request. Your draft has been kept; please retry or email us directly." });
     const result: unknown = await response.json();
     if (!result || typeof result !== "object" || !("id" in result) || typeof result.id !== "string" || !result.id) return reply(502, { error: "The email provider returned an unexpected result. Please retry with the same request details." });

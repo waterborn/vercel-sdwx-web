@@ -3,7 +3,7 @@
 > 执行依据：`GLINTIC_Studio_独立站建站需求说明书_v3.1_审核版.md`，D1–D4。
 > 本报告跟踪当前英文开发版的未闭环项目；不代表正式上线批准。原报告的订阅表单、阿里外链及旧字体遗留项已不适用于本版。
 
-## 当前验证范围与证据
+## v3.1 历史验证范围与证据（最新结果见 Task1 章节）
 
 - 日期：2026-11-22；本次工作区改动尚未提交。
 - 环境：Next.js 16.4.6 生产构建 + `next start`，`http://localhost:3100`。
@@ -17,6 +17,37 @@
 - 成功提示及重新申请焦点仅以本地拦截的 200 响应验证，不代表 Resend 收信成功。200% 仅测 1440→720 CSS 像素的等效重排，不代替浏览器原生缩放验收。
 
 旧版 2026-11-10 的传输量、LCP 和字体体积不作为本版性能结论；历史 `.verify/r2-*` 数据仍保留。
+
+## Task1 实施验收与待业务确认（2026-11-25）
+
+当前 DEV-TASK-001 开发范围已完成；此结论不等于正式上线批准。实施记录见 `Task1_全局导航MegaMenu与首页信息流重构开发指南.md` 第六节。
+
+### 当前证据
+
+- Next.js 16.4.6 生产模式 `http://localhost:3100`；`tsc --noEmit`、`npm run build` 通过，路由仍为 7 static + `/api/rfq` dynamic。ESLint 0 errors / 7 个 `no-img-element` warnings，继续使用既定 sharp 预编码架构。
+- `npm test`：18 项通过；`node scripts/test-site.mjs --http=http://localhost:3100`：19 项通过，包含服务端模拟、邮件空字段模板与实际页面/资源/首批 24 卡 HTML。
+- 本机 Edge 158.0.4370.33 通过 Node 内置 WebSocket/CDP 驱动，无新增 npm 依赖；禁用独立验收实例的扩展与同步。现有临时 puppeteer-core 已不可用，两个浏览器脚本改用 `.verify/cdp-browser.mjs`。
+- `.verify/task1-browser.json`：390/640/1024/1280/1440 × 首页/Products/About/Legal/404 共 25 组，0 横向溢出、0 破图、0 动画残留隐藏，英文 lang 与主控件 ≥44px 检查通过。Windows 滚动条占 15px，scrollWidth 为视口宽度减 15px，不将正常滚动条算为溢出。
+- Task1 11 组交互全部通过：五列/19 系列/5 个 Made-to-Order、1140px 面板与 72px Header 内容行；hover/Enter/Space/ArrowDown/Esc/离开焦点/外部点击；19 系列与五集合结果；同页 cat+series 导航/后退/aria-current；旧链接归一与参数保留；六模块/3+2 布局（前三卡 span 2、后两卡 span 3）/锚点不被 Header 遮挡；桌面 Hero 双行/QA/证据卡/Token/样品图；Quick 必填/503/504/草稿与 UUID；Sample/OEM/模拟 200 成功焦点与清空；移动折叠与 RFQ 互斥；减弱动效/等效 720px 重排/无 JS。
+- `.verify/v31-browser.json`：完整 RFQ 与目录回归的 11 组交互、25 组视口通过。覆盖 24→48 分页、More 19、G-06、排序/历史、SKU 预填、Tab 循环/滚动锁、关闭确认/遮罩、503 重试 UUID、成功焦点/重新申请、样品数量/移动宽度、站内链接与无 JS。
+- IDE 浏览器另实测桌面导航、Sample Box RFQ 打开/关闭、四字段 Quick 输入响应；最终措辞复核确认 Hero 与四徽标正确、Collections 五列展开/Esc 关闭、样品盒与 Contact 锚点命中，可视区域截图 `.verify/task1-browser-final-contact.png` 已人工检查。`task1-browser-final-top.png` 是较早版本的截图，不作为最终 Hero 文案证据；最终首页/菜单/样品截图以独立 Edge/CDP 产物为准。五视口结论不由 IDE 固定视口推断。
+- 首页全页截图：`.verify/task1-home-390.png`、`.verify/task1-home-1440.png`；菜单截图：`.verify/task1-mega-menu.png`；完整样品盒可见证据：`.verify/task1-sample-box.png`；Quick 失败态：`.verify/task1-quick-error.png`。早期 `task1-ide-browser.png` 全页截图截取不完整，不作为完整首页证据。
+- Quick 成功焦点曾出现异步 DOM 挂载竞争，已改为成功面板挂载后的 effect 聚焦；最终浏览器复测通过。开发中临时测试驱动同步/扩展问题不计入最终生产页面结论。
+- 所有浏览器 200/503/504 均为本地拦截；服务端 Resend 全部 mock。未发送真实邮件，不代表实际收信成功。未提交、推送、部署或修改 DNS，package.json/package-lock.json 未改。
+
+### Task1 事实口径
+
+1. 全球 DDP/门到门承诺 → `DDP quoted per destination`，覆盖范围与运费需确认。
+2. `Eco-Certified Materials` → `Certificates on request`，没有文件不作认证承诺。
+3. 样品盒全额退款 → 购买前书面确认退款/抵扣，US$39 为参考价，内容和运费待确认。
+4. 第三方徽标/PDF → 四张文字证据需求卡与 About 说明；待提供证书 PDF、适用 SKU、有效期和展示许可。
+5. 按计划保留 `10 pcs Low MOQ`/`7-Day Express Sampling`，配星号与逐 SKU/目的地书面确认脚注；仅规划目标，不承诺普遍 MOQ、交期或最终材料规格。
+
+开箱图为生成的 16:9 示意图，不是实拍；三档 WebP 与 manifest 已落地。12 business hours 仅为目标回复时间，不是合同 SLA，仍待业务团队确认执行能力。G-02 软木选项与 G-04 neoprene 材料另行确认。目录实际为 47 映射 + 19 More = 66、19 系列、Fascia 10 SKU；计划中的 46/20、20 系列、Fascia 9 为统计笔误，未以增删产品凑数。
+
+### 仍需业务闭环
+
+以下第一至四节的上线阻断项继续有效：真实发信/收信与正式联系渠道、样品内容和退款/运费条款、认证文件/授权、商业事实、域名/DNS/隐私，以及 Lighthouse 和真实设备/读屏/浏览器原生缩放。它们不是本次 Task1 开发验收的已完成项。
 
 ## 依赖与 Node 版本（2026-11-23 更新）
 
@@ -77,6 +108,6 @@ npm run build
 npm run start -- --port 3100
 ```
 
-服务运行后另一个终端执行 `node scripts/test-site.mjs --http=http://localhost:3100`，检查实际页面与资源。`.verify/verify-v31.mjs` 为现有 Edge 环境下的本地浏览器检查脚本，默认测试未配置发信的 503 场景；配置正式邮件后不得直接运行真实提交部分，应先改为全程拦截本地请求。
+服务运行后另一个终端执行 `node scripts/test-site.mjs --http=http://localhost:3100`，检查实际页面与资源。浏览器验收依次运行 `node .verify/verify-task1.mjs`、`node .verify/verify-v31.mjs`；它们全程拦截 /api/rfq，默认不发送邮件。适配器使用本机 Edge 与 Node 内置 WebSocket，不需安装 puppeteer-core；两脚本使用同一个调试端口，应顺序运行。验收脚本、报告与截图在 gitignored 的 `.verify` 目录中保留为本地证据。
 
 一期没有在线支付或 Newsletter 后端；Sample Box 在确认内容、地址与运费后线下发 PayPal 账单。无需复测已移除的阿里产品跳转，但脚本侧来源采集记录仍保留。
